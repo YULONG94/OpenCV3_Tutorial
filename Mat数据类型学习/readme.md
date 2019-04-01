@@ -2,7 +2,7 @@
 
 ## Mat数据类型的构造
 ### 方法零（create构造法）
-> void cv::Mat::create(int rows,
+> void cv::Mat::create(int rows, 
 >                     int cols,                   
 >                     int type)
                      
