@@ -67,7 +67,7 @@ Mat M = Mat(V, CV_8UC1, Scalar::all(0));
 ```
 > cv::Mat::Mat(const Mat & m)
 ```
-//类似于M.clone(),下面的几种根据已有的举证进行创建的例子也都是这样
+//不同于M.clone(),下面的几种根据已有的举证通过Mat法创建的例子也都只是复制指针头
 Mat M0 = Mat(2, 3, CV_8UC1)
 Mat M = Mat(M0);
 ```
@@ -106,4 +106,9 @@ cv::Mat::Mat(const Matx<_Tp, m, n> & mtx, bool copyData = True)
 cv::Mat::Mat(const Point3_<_Tp> pt, bool copyData = true)
 cv::Mat::Mat(const MatCommaInitializer_<_Tp> & commaInitializer)
 cv::Mat::Mat(const cuda::GpuMat & m)
+```
+### 方法二（复制拷贝法）
+> clone()和copyTo()
+```
+实现对图像的拷贝，而且结果与拷贝源独立，这就是与直接利用Mat法创建的区别
 ```
