@@ -117,7 +117,7 @@ Mat m2;
 Mat mask = Mat::eye(4, 4, CV_8UC1);
 mat.copyTo(m2, mask);
 ```
-> void Mat::convertTo( Mat& m, int rtype, double alpha=1, double beta=0 ) const;
+> void cv::Mat::convertTo( Mat& m, int rtype, double alpha=1, double beta=0 ) const;
 ```
 // 进行数据格式转化并对数值进行线性处理
 // m(x,y)=saturate_cast<rType>(alpha*(*this)(x,y)+beta);
@@ -125,5 +125,9 @@ mat.copyTo(m2, mask);
 Mat mat_ori = Mat(4, 4, CV_8UC1);
 Mat mat_dst;
 mat_ori.convertTo(mat_dst, CV_8SC1, 1, 0);
+```
+> void cv::Mat::assignTo(Mat & m, int type)
+```
+相当于convertTo的简化版本
 ```
 
