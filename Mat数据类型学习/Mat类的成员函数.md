@@ -187,3 +187,9 @@ Mat dst = data.reshape(0, data.rows*data.cols);  //通道数不变，将矩阵�
 Mat dst = data.reshape(2, 0);  //通道数由1变为2，行数不变
 Mat dst = data.reshape(2, data.rows/5);  //通道数由1变为2，行数变为原来的五分之一
 ```
+> resize()
+```
+```
+> setTo()
+```
+```
