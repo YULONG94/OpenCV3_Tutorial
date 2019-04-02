@@ -71,11 +71,13 @@ Mat M = Mat(V, CV_8UC1, Scalar::all(0));
 Mat M0 = Mat(2, 3, CV_8UC1)
 Mat M = Mat(M0);
 ```
-> cv::Mat::Mat(int rows, int cols, int type, void* data, size_t step = AUTO_STEP)
-> cv::Mat::Mat(Size size, int type, void* data, size_t step = AUTO_STEP)
-> cv::Mat::Mat(int ndims, const int* sizes, int type, coid* data, const size_t* steps = 0)
-> cv::Mat::Mat(const std::vector<int> & sizes, int type, void* data, const size_t* steps = 0)
-> 以上四种暂时没学（用到的时候再说）
+> 以下四种暂时没学（用到的时候再说）
+```
+cv::Mat::Mat(int rows, int cols, int type, void* data, size_t step = AUTO_STEP)
+cv::Mat::Mat(Size size, int type, void* data, size_t step = AUTO_STEP)
+cv::Mat::Mat(int ndims, const int* sizes, int type, coid* data, const size_t* steps = 0)
+cv::Mat::Mat(const std::vector<int> & sizes, int type, void* data, const size_t* steps = 0)
+```
 > cv::Mat::Mat(const Mat& m, const Range & rowRange, const Range & colRange = Range::all())
 ```
 Mat M0 = Mat(10, 10, CV_8UC1);
@@ -94,11 +96,14 @@ r.height = 4;
 r.width = 4;
 Mat M = Mat(M0, r);
 ```
-> cv::Mat::Mat(const Mat & m, const Range * ranges)
-> cv::Mat::Mat(const Mat & m, const std::Vector<Range> & ranges)
-> cv::Mat::Mat(const std::vector<_Tp> & vec, bool copyDta = false)
-> cv::Mat::Mat(const Vec<_Tp, n> & vec, bool copyData = true)
-> cv::Mat::Mat(const Matx<_Tp, m, n> & mtx, bool copyData = True)
-> cv::Mat::Mat(const Point3_<_Tp> pt, bool copyData = true)
-> cv::Mat::Mat(const MatCommaInitializer_<_Tp> & commaInitializer)
-> cv::Mat::Mat(const cuda::GpuMat & m)
+> 以下几种也估计很少用到，先放着，有前面一些应该够用一阵子了
+```
+cv::Mat::Mat(const Mat & m, const Range * ranges)
+cv::Mat::Mat(const Mat & m, const std::Vector<Range> & ranges)
+cv::Mat::Mat(const std::vector<_Tp> & vec, bool copyDta = false)
+cv::Mat::Mat(const Vec<_Tp, n> & vec, bool copyData = true)
+cv::Mat::Mat(const Matx<_Tp, m, n> & mtx, bool copyData = True)
+cv::Mat::Mat(const Point3_<_Tp> pt, bool copyData = true)
+cv::Mat::Mat(const MatCommaInitializer_<_Tp> & commaInitializer)
+cv::Mat::Mat(const cuda::GpuMat & m)
+```
