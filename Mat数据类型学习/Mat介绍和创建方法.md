@@ -18,13 +18,13 @@ M.create(Size(4, 5), CV_8UC1);
 Mat M;
 int SZ[2] = { 2, 3 };
 // sizes的形式按照{rows, cols}
-// ndims必须小于等于2才行
+// ndims可以大于2，但是对于三维以上的Mat不能在使用cout进行打印输出了
 M.create(2, SZ, CV_8UC1);
 ```
 > void cv::Mat::create(const std::vector<int>& sizes, int type)
 ```
 Mat M;
-// sizes的规则也是按照{rows, cols}，维度也最多是2维
+// sizes的规则也是按照{rows, cols}，维度也是可以超过2维的，不过不能通过cout打印检查
 vector<int> sv{ 2,3 };
 M.create(sv, CV_8UC1);
 ```
