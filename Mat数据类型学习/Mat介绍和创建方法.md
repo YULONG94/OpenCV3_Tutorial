@@ -110,5 +110,20 @@ cv::Mat::Mat(const cuda::GpuMat & m)
 ### 方法二（复制拷贝法）
 > clone()和copyTo()
 ```
-实现对图像的拷贝，而且结果与拷贝源独立，这就是与直接利用Mat法创建的区别
+//实现对图像的拷贝，而且结果与拷贝源独立，这就是与直接利用Mat法创建的区别
+Mat mat = Mat(4, 4, CV_8UC1);
+Mat m1 = mat.clone();
+Mat m2;
+Mat mask = Mat::eye(4, 4, CV_8UC1);
+mat.copyTo(m2, mask);
 ```
+> void Mat::convertTo( Mat& m, int rtype, double alpha=1, double beta=0 ) const;
+```
+// 进行数据格式转化并对数值进行线性处理
+// m(x,y)=saturate_cast<rType>(alpha*(*this)(x,y)+beta);
+// 由于有数据类型的转换，所以需要用saturate_cast<rType>来处理数据的溢出
+Mat mat_ori = Mat(4, 4, CV_8UC1);
+Mat mat_dst;
+mat_ori.convertTo(mat_dst, CV_8SC1, 1, 0);
+```
+
