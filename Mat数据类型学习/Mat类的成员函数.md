@@ -53,4 +53,4 @@ for (it = a.begin<Vec3b>(), end = a.end<Vec3b>(); it != end; ++it)
 Mat a = imread("../data/1.jpg", 0);
 cout << a.channels() << endl;
 ```
-> 
+
