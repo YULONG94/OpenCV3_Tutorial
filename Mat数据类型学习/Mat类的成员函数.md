@@ -96,3 +96,36 @@ Mat d0 = m.diag(0);
 Mat d1 = m.diag(1);
 Mat d_1 = m.diag(-1);
 ```
+> dot()
+```
+//矩阵点乘，如果是想实现矩阵乘法可以直接使用*
+//矩阵点乘是对应元素相乘再进行加和
+Mat A;
+Mat B;
+double AB = A.dot(B)
+Mat AB = A*B
+```
+> mul()
+```
+//点对点相乘，得到的结果A，B和AB的尺寸一致，对应点数值满足a*b=ab
+//同时也能通过这种方式进行除法运算，
+Mat A;
+Mat B;
+Mat AB = A.mul(B)
+Mat ADB = A.mul(1/B)
+```
+> cross()
+```
+//两个三维向量做叉乘
+//数据的格式一定要是<float>，验证过如果是<int>会计算出错，很奇怪
+Mat a = (Mat_<float>(3,1) << 1, 0, 0);
+Mat b = (Mat_<float>(3,1) << 0, 1, 0);
+Mat c = a.cross(b);
+```
+> mean()和sum()
+```
+//计算每一层的平均值和加和
+Mat a = Mat(2, 3, CV_8UC3);
+Scalar s = sum(a);
+Scalar m = mean(a);
+```
