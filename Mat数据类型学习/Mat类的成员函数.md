@@ -53,4 +53,46 @@ for (it = a.begin<Vec3b>(), end = a.end<Vec3b>(); it != end; ++it)
 Mat a = imread("../data/1.jpg", 0);
 cout << a.channels() << endl;
 ```
-
+> Mat cv::Mat::colRange()和rowRange()
+```
+Mat mat_ori = Mat::eye(5, 5, CV_8UC1);
+Mat m1 = mat_ori.rowRange(1, 3);
+Mat m2 = mat_ori.rowRange(Range(1, 3));
+Mat m3 = mat_ori.colRange(1, 2);
+```
+> Mat cv::Mat::col(int x)和row(int x)
+```
+//返回第x列或行
+Mat mat_ori = Mat::eye(5, 5, CV_8UC1);
+Mat m1 = mat_ori.row(2);
+Mat m3 = mat_ori.col(4);
+```
+> Mat数据类型的成员变量
+```
+int cv::Mat::cols
+int cv::Mat::rows
+int cv::Mat::data
+int cv::Mat::dims
+int cv::Mat::size
+```
+> int cv::Mat::depth()
+```
+返回Mat的深度
+CV_8U - 8-bit unsigned integers ( 0..255 )
+CV_8S - 8-bit signed integers ( -128..127 )
+CV_16U - 16-bit unsigned integers ( 0..65535 )
+CV_16S - 16-bit signed integers ( -32768..32767 )
+CV_32S - 32-bit signed integers ( -2147483648..2147483647 )
+CV_32F - 32-bit floating-point numbers ( -FLT_MAX..FLT_MAX, INF, NAN )
+CV_64F - 64-bit floating-point numbers ( -DBL_MAX..DBL_MAX, INF, NAN ) 
+```
+> Mat cv::Mat::diag(int d = 0) const
+```
+Mat m = (Mat_<int>(3,3) <<
+            1,2,3,
+            4,5,6,
+            7,8,9);
+Mat d0 = m.diag(0);
+Mat d1 = m.diag(1);
+Mat d_1 = m.diag(-1);
+```
