@@ -2,7 +2,7 @@
 
 ## Mat数据类型的构造
 ### 方法零（create构造法）
-### **验证发现这种方法不能对初值进行设置，都是默认的205**
+#### 验证发现这种方法不能对初值进行设置，都是默认的205
 > void cv::Mat::create(int rows, int cols, int type)
 ```
 Mat M;
@@ -27,4 +27,17 @@ Mat M;
 // sizes的规则也是按照{rows, cols}，维度也最多是2维
 vector<int> sv{ 2,3 };
 M.create(sv, CV_8UC1);
+```
+### 方法一（Mat构造法）
+> cv::Mat::Mat(int rows, int cols, int type)
+```
+Mat M = Mat(2, 3, CV_8UC1);
+```
+> cv::Mat::Mat(Size size(int cols, int rows), int type)
+```
+Mat M = Mat(Size(2, 3), CV_8UC1);
+```
+> cv::Mat::Mat(int rows, int cols, int type, const Scalar& s)
+```
+Mat M = Mat(2, 3, CV_8UC1, Scalar::all(0));
 ```
