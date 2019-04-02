@@ -47,3 +47,10 @@ for (it = a.begin<Vec3b>(), end = a.end<Vec3b>(); it != end; ++it)
 	cout << int((*it)[0])<<endl;
 }
 ```
+> channels()
+```
+//获取Mat的通道数
+Mat a = imread("../data/1.jpg", 0);
+cout << a.channels() << endl;
+```
+> 
