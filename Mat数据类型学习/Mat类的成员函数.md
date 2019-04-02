@@ -177,3 +177,13 @@ for(int h = 0 ; h < image.rows ; ++ h)
 	}
 }
 ```
+> Mat Mat::reshape(int cn, int rows=0) const
+```
+// cn: 表示通道数(channels), 如果设为0，则表示保持通道数不变，否则则变为设置的通道数。
+// rows: 表示矩阵行数。 如果设为0，则表示保持原有的行数不变，否则则变为设置的行数。
+Mat data = Mat(20, 30, CV_32F);  //设置一个20行30列1通道的一个矩阵
+Mat dst = data.reshape(0, 1);  //通道数不变，将矩阵序列化1行N列的行向量
+Mat dst = data.reshape(0, data.rows*data.cols);  //通道数不变，将矩阵序列化N行1列的列向量
+Mat dst = data.reshape(2, 0);  //通道数由1变为2，行数不变
+Mat dst = data.reshape(2, data.rows/5);  //通道数由1变为2，行数变为原来的五分之一
+```
