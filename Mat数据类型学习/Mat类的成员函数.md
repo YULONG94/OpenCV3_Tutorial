@@ -129,3 +129,51 @@ Mat a = Mat(2, 3, CV_8UC3);
 Scalar s = sum(a);
 Scalar m = mean(a);
 ```
+> void cv::Mat::pop_back(size_t nelems = 1)
+```
+//删除最后nelems个数据
+Mat A = Mat::eye(3, 3, CV_8UC1);
+A.pop_back(2);
+```
+> ptr()
+```
+// 与at(),类似，就不介绍非常复杂的情况了，能掌握下面几种访问Mat数据的方式应该就够了
+// 对于三通道的图像
+for(int h = 0 ; h < image.rows ; ++ h)
+{
+	for(int w = 0 ; w < image.cols / 2 ; ++ w)
+	{
+		uchar *ptr = image.ptr<uchar>(h , w) ;
+		ptr[0] = 255 ;
+		ptr[1] = 0 ;
+		ptr[2] = 0 ;
+	}
+}
+for(int h = 0 ; h < image.rows ; ++ h)
+{
+	for(int w = 0 ; w < image.cols / 2 ; ++ w)
+	{
+		Vec3b *ptr = image.ptr<Vec3b>(h , w) ;
+		ptr->val[0] = 0 ;
+		ptr->val[1] = 255 ;
+		ptr->val[2] = 0 ;
+	}
+}
+// 单通道图像
+for(int h = 0 ; h < image.rows ; ++ h)
+{
+	uchar *ptr = image.ptr(h) ;
+	for(int w = 0 ; w < image.cols / 2 ; ++ w)
+	{
+		ptr[w] = 128 ;
+	}
+}
+for(int h = 0 ; h < image.rows ; ++ h)
+{
+	for(int w = 0 ; w < image.cols / 2 ; ++ w)
+	{
+		uchar *ptr = image.ptr<uchar>(h , w) ;
+		*ptr = 255 ;
+	}
+}
+```
