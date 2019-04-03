@@ -41,7 +41,17 @@ waitKey();
 # 仿射变换
 OpenCV通过两个函数的组合使用来实现仿射变换：
 1. 使用warpAffine来实现简单重映射
+> void cv::warpAffine (InputArray src, 
+                       OutputArray dst, 
+                       InputArray M, 
+                       Size dsize, 
+                       int flags = INTER_LINEAR, 
+                       int borderMode = BORDER_CONSTANT, 
+                       const Scalar & borderValue = Scalar())
+
 2. 使用getRotationMatrix2D来获得旋转矩阵或者getAffineTransform来获得仿射变化矩阵
+> Mat M1=getAffineTransform(const Point2f* src, const Point2f* dst)
+> Mat M2=getRotationMatrix2D (CvPoint2D32f  center,double angle,double scale)
 注意：
 仿射变换指的是一个向量空间进行一次线性变换并接上一个平移，变换为另一个向量空间的过程。
 图像进行仿射变换后，有以下几个特点：
