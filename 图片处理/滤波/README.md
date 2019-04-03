@@ -119,3 +119,90 @@ void cv::medianBlur (InputArray src,
                      OutputArray dst, 
                      int ksize)
 ```
+# 型态滤波
+```
+void cv::morphologyEx (InputArray src, 
+                       OutputArray dst, 
+                       int op, 
+                       InputArray kernel, 
+                       Point anchor = Point(-1,-1), 
+                       int iterations = 1, 
+                       int borderType = BORDER_CONSTANT, 
+                       const Scalar & borderValue = morphologyDefaultBorderValue())
+```
+# 下采样
+```
+void cv::pyrDown (InputArray src, 
+                  OutputArray dst, 
+                  const Size & dstsize = Size(), 
+                  int borderType = BORDER_DEFAULT)
+```
+# pyrMeanShiftFiltering
+```
+void cv::pyrMeanShiftFiltering (InputArray src, 
+                                OutputArray dst, 
+                                double sp, 
+                                double sr, 
+                                int maxLevel = 1, 
+                                TermCriteria termcrit = TermCriteria(TermCriteria::MAX_ITER+TermCriteria::EPS, 5, 1))
+```
+# 上采样
+```
+void cv::pyrUp (InputArray src, 
+                OutputArray dst, 
+                const Size & dstsize = Size(), 
+                int borderType = BORDER_DEFAULT)
+```
+# Scharr
+```
+void cv::Scharr (InputArray src, 
+                 OutputArray dst, 
+                 int ddepth, 
+                 int dx, 
+                 int dy, 
+                 double scale = 1,
+                 double delta = 0, 
+                 int borderType = BORDER_DEFAULT)
+```
+# sepFilter2D
+```
+void cv::sepFilter2D (InputArray src, 
+                      OutputArray dst, 
+                      int ddepth, 
+                      InputArray kernelX, 
+                      InputArray kernelY, 
+                      Point anchor = Point(-1,-1), 
+                      double delta = 0, 
+                      int borderType = BORDER_DEFAULT)
+```
+# Sobel
+```
+void cv::Sobel (InputArray src, 
+                OutputArray dst, 
+                int ddepth, 
+                int dx, 
+                int dy, 
+                int ksize = 3, 
+                double scale = 1, 
+                double delta = 0, 
+                int borderType = BORDER_DEFAULT)
+```
+# spatialGradient
+```
+void cv::spatialGradient (InputArray src, 
+                          OutputArray dx, 
+                          OutputArray dy, 
+                          int ksize = 3, 
+                          int borderType = BORDER_DEFAULT)
+```
+# sqrBoxFilter
+```
+void cv::sqrBoxFilter (InputArray _src, 
+                       OutputArray _dst, 
+                       int ddepth, 
+                       Size ksize, 
+                       Point anchor = Point(-1, -1), 
+                       bool normalize = true, 
+                       int borderType = BORDER_DEFAULT)
+```
+# 
