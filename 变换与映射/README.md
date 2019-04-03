@@ -96,5 +96,61 @@ imshow("仿射变换2", dst_warpRotateScale);
 waitKey(0);
 ```
 # 透视变换
-
-# 极坐标变换
+```
+void cv::warpPerspective (InputArray src, 
+                          OutputArray dst, 
+                          InputArray M, 
+                          Size dsize, 
+                          int flags = INTER_LINEAR, 
+                          int borderMode = BORDER_CONSTANT, 
+                          const Scalar & borderValue = Scalar())
+```
+透视变换的API和仿射变换的API很像，原理也相同，不同的只是由之前的三点变为四点法求透视变换矩阵，变换矩阵也由2x3变为3x3。
+获得转化变换矩阵是通过getPerspectiveTransform()
+> Mat cv::getPerspectiveTransform (const Point2f src[], const Point2f dst[])
+```
+//举个例子
+Mat src, dst;
+src = imread("C:/Users/59235/Desktop/image/girl5.jpg");
+if (!src.data) {
+	printf("could not load image...\n");
+	return -1;
+}
+namedWindow("original image", CV_WINDOW_AUTOSIZE);
+imshow("original image", src);
+Mat dst_warp, dst_warpRotateScale, dst_warpTransformation, dst_warpFlip;
+Point2f srcPoints[4];//原图中的四点 ,一个包含三维点（x，y）的数组，其中x、y是浮点型数
+Point2f dstPoints[4];//目标图中的四点  
+srcPoints[0] = Point2f(0, 0);
+srcPoints[1] = Point2f(0, src.rows);
+srcPoints[2] = Point2f(src.cols, 0);
+srcPoints[3] = Point2f(src.cols, src.rows);
+//映射后的四个坐标值
+dstPoints[0] = Point2f(src.cols*0.1, src.rows*0.1);
+dstPoints[1] = Point2f(0, src.rows);
+dstPoints[2] = Point2f(src.cols, 0);
+dstPoints[3] = Point2f(src.cols*0.7, src.rows*0.8);
+Mat M1 = getPerspectiveTransform(srcPoints, dstPoints);//由四个点对计算透视变换矩阵  
+warpPerspective(src, dst_warp, M1, src.size());//仿射变换  
+imshow("perspective transformation1（四点法）", dst_warp);
+waitKey(0);
+```
+# 极坐标变换（考虑到基本不用，所以就不研究了）
+```
+void cv::warpPolar (InputArray src, 
+                    OutputArray dst, 
+                    Size dsize, 
+                    Point2f center, 
+                    double maxRadius, 
+                    int flags)
+void cv::cvLinePolar(const CvArr * src, 
+                    CvArr * dst, 
+                    CvPoint2D32f center, 
+                    double maxRadius, 
+                    int flags)
+void cv::cvLogPolar (const CvArr * src, 
+                    CvArr * dst, 
+                    CvPoint2D32f center, 
+                    double maxRadius, 
+                    int flags)
+```
