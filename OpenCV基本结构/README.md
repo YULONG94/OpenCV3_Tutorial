@@ -73,6 +73,10 @@ int myArea = size2.area();
 ```
 # Rect
 ```
+
+```
+# RotatedRect
+```
 RotatedRect(const Point2f &center, const Size2f &size, float angle);
 RotatedRect rRect1(Point2f(150,150), Size2f(100,50), 30.0);
 RotatedRect rRect2; 
