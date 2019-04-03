@@ -63,5 +63,22 @@ fillPoly( img,
           lineType );
 ```
 # Size
-
+```
+Size(int width, int height)
+Size size1(150, 100);
+Size size2;
+size2.width = 150;
+size2.height = 100;
+int myArea = size2.area();
+```
 # Rect
+```
+RotatedRect(const Point2f &center, const Size2f &size, float angle);
+RotatedRect rRect1(Point2f(150,150), Size2f(100,50), 30.0);
+RotatedRect rRect2; 
+rRect2.center = Point2f(150,150);
+rRect2.size = Size2f(100,50);
+rRect2.angle = 30.0;
+Point2f vertices[4];
+rRect2.points(vertices);
+```
