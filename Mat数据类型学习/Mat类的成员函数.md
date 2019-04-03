@@ -189,13 +189,47 @@ Mat dst = data.reshape(2, data.rows/5);  //通道数由1变为2，行数变为�
 ```
 > void resize(InputArray src, OutputArray dst, Size dsize, double fx=0, double fy=0, int interpolation=INTER_LINEAR)
 ```
+// dsize和fx+fy是两种对输出图像的尺寸控制的方法
+// 如果dsize有一维是零，则通过fx和fy来控制，也可以直接设置为None
+// 如果dsize有效，则忽略后面fx和fy的取值
+Mat A = imread("../data/1.jpg");
+Mat B;
+resize(A, B, Size(200, 1000));
+imshow("A", A);
+imshow("B", B);
+waitKey();
 ```
 > void pyrDown(InputArray src, OutputArray dst, const Size& dstsize=Size(), int border-Type=BORDER_DEFAULT)
 ```
+// 下采样，图像变为原来的1/2，dstsize可以不设置
+// 如果设置dstsize，一定需要满足|dstsize.width * 2 - src.cols| ≤ 2;|dstsize.height * 2 - src.rows| ≤ 2; 否则会报错
+Mat A = imread("../data/1.jpg");
+Mat C;
+pyrDown(A, C);
+imshow("A", A);
+imshow("C", C);
+waitKey();
 ```
 > void pyrUp(InputArray src, OutputArray dst, const Size& dstsize=Size(), int border-Type=BORDER_DEFAULT)
 ```
+// 与下采样相对
+Mat A = imread("../data/1.jpg");
+Mat B;
+pyrUp(A, B);
+imshow("A", A);
+imshow("B", B);
+waitKey();
 ```
-> setTo()
+> Mat& setTo(InputArray value, InputArray mask=noArray()); 
 ```
+// 功能：把矩阵mask中元素不为0的点全部变为value值；
+// 当默认不添加mask的时候，表明mask是一个与原图尺寸大小一致的且元素值全为非0的矩阵，
+// 因此不加mask的时候，会将原矩阵的像素值全部赋值为value；
+Mat src(3, 3, CV_8UC1);
+Mat mask1(3, 3, CV_8UC1, Scalar(0));
+Mat mask2(3, 3, CV_8UC1, Scalar(10));
+src.setTo(100, mask1);
+cout << src << endl;
+src.setTo(100, mask1);
+cout << src << endl;
 ```
