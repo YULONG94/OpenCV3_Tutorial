@@ -54,6 +54,7 @@ void cv::boxFilter (InputArray src,
                     bool normalize = true, 
                     int borderType = BORDER_DEFAULT)
 ```
+本质就是均值滤波
 # 高斯金字塔
 ```
 void cv::buildPyramid (InputArray src, 
