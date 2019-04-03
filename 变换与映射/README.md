@@ -16,6 +16,7 @@ void cv::remap (InputArray src,
 // borderValue:边界的数值，默认为0
 ```
 ![Image text](https://github.com/YULONG94/OpenCV3_Tutorial/blob/master/images/InterpolationFlags.PNG)
+![Image text](https://github.com/YULONG94/OpenCV3_Tutorial/blob/master/images/BorderTypes.PNG)
 ```
 //举个例子
 Mat srcImage = imread("2.jpg");
@@ -40,7 +41,7 @@ waitKey();
 # 仿射变换
 OpenCV通过两个函数的组合使用来实现仿射变换：
 1. 使用warpAffine来实现简单重映射
-2. 使用getRotationMatrix2D来获得旋转矩阵
+2. 使用getRotationMatrix2D来获得旋转矩阵或者getAffineTransform来获得仿射变化矩阵
 注意：
 仿射变换指的是一个向量空间进行一次线性变换并接上一个平移，变换为另一个向量空间的过程。
 图像进行仿射变换后，有以下几个特点：
