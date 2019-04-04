@@ -278,7 +278,6 @@ void cv::adaptiveThreshold (InputArray src,
                             int thresholdType, 
                             int blockSize, 
                             double C)
-
 ```
 # 颜色空间转化
 ```
@@ -328,10 +327,18 @@ void cv::grabCut (InputArray img,
 ```
 void cv::integral (InputArray src, 
                    OutputArray sum, 
-                   OutputArray sqsum, //非必需，重载函数
-                   OutputArray tilted, //非必需，重载函数
+                   int sdepth = -1)
+void cv::integral (InputArray src, 
+                   OutputArray sum, 
+                   OutputArray sqsum, 
                    int sdepth = -1 
-                   int sqdepth = -1) //非必需，重载函数
+                   int sqdepth = -1)
+void cv::integral (InputArray src, 
+                   OutputArray sum, 
+                   OutputArray sqsum, 
+                   OutputArray tilted, 
+                   int sdepth = -1 
+                   int sqdepth = -1) 
 ```
 # threshold
 ```
