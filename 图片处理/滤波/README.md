@@ -462,7 +462,7 @@ sepFilter2D(src, result, src.depth(), kx, ky, Point(-1, -1), 0, BORDER_DEFAULT);
 imshow("result", result);
 waitKey();
 
-
+//通过前面的getDerivKernels可以计算所需要的kx和ky
 ```
 # Sobel滤波器
 ```
@@ -475,6 +475,15 @@ void cv::Sobel (InputArray src,
                 double scale = 1, 
                 double delta = 0, 
                 int borderType = BORDER_DEFAULT)
+
+参数设置和Scharr相同，多了一个可以控制的ksize用来说明核的尺寸
+//例如：
+
+Mat src = imread("../data/1.jpg");
+Mat result;
+Sobel(src, result, -1, 2, 1, 7, 1, 0);
+imshow("result", result);
+waitKey();
 ```
 # spatialGradient
 ```
@@ -483,6 +492,11 @@ void cv::spatialGradient (InputArray src,
                           OutputArray dy, 
                           int ksize = 3, 
                           int borderType = BORDER_DEFAULT)
+
+//其实就是调用了Sobel算子
+//相当于：
+Sobel( src, dx, CV_16SC1, 1, 0, 3 );
+Sobel( src, dy, CV_16SC1, 0, 1, 3 );
 ```
 # sqrBoxFilter
 ```
@@ -493,5 +507,15 @@ void cv::sqrBoxFilter (InputArray _src,
                        Point anchor = Point(-1, -1), 
                        bool normalize = true, 
                        int borderType = BORDER_DEFAULT)
+
+// 据说与BoxFilter没什么区别，但是很遗憾我实现起来的效果只有白茫茫的一片，希望有人能指导我一下
+//我的例子是：
+Mat src = imread("../data/1.jpg");
+Mat result1, result2;
+boxFilter(src, result1, -1, Size(5, 5));
+sqrBoxFilter(src, result2, -1, Size(5, 5));
+imshow("origin", src);
+imshow("result1", result1);
+imshow("result2", result2);
+waitKey();
 ```
-# 
