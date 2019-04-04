@@ -53,13 +53,14 @@ void cv::boxFilter (InputArray src,
                     Point anchor = Point(-1,-1), 
                     bool normalize = true, 
                     int borderType = BORDER_DEFAULT)
-```
+
 本质就是均值滤波
 关于ddepth的设置，根据src的depth，接受的可以是下面情况
 src.depth() = CV_8U, ddepth = -1/CV_16S/CV_32F/CV_64F
 src.depth() = CV_16U/CV_16S, ddepth = -1/CV_32F/CV_64F
 src.depth() = CV_32F, ddepth = -1/CV_32F/CV_64F
 src.depth() = CV_64F, ddepth = -1/CV_64F
+```
 # 高斯金字塔
 ```
 void cv::buildPyramid (InputArray src, 
@@ -173,14 +174,14 @@ void cv::getDerivKernels (OutputArray kx,
                           int ksize, 
                           bool normalize = false, 
                           int ktype = CV_32F)
-```
+
 通过预先设定来获得想要的过滤核，
 前两个为接受输出的两个方向的核，
 dx和dy为所设置的两个方向的阶数，一阶就表示像素的梯度（一阶导），二阶就是梯度的梯度（二阶导）
 ksize为需要的核的大小
 通过normalize的设置，可以获得归一化之后的核
 这个和下面的两个函数都是为了方便设计过滤核
-```
+
 //例子：
 Mat kx, ky;
 getDerivKernels(kx, ky, 1, 1, 5, true);
@@ -196,7 +197,7 @@ Mat cv::getGaborKernel (Size ksize,
                         double gamma, 
                         double psi = CV_PI *0.5, 
                         int ktype = CV_64F)
-```
+
 之前对这个核并不了解，研究了一下，觉得很有意思，下面多一些篇幅说明以下
 首先，这个核可以结合Filter2D滤波器进行使用，二维Gabor函数的数学表达如下（OpenCV 里好像只用到了实数部分）
 
@@ -207,8 +208,8 @@ Mat cv::getGaborKernel (Size ksize,
 （4）ψψ表示相位偏移量，取值范围是-180~180； 
 （5）σσ表示高斯函数的标准差； 
 （6）γγ表示长宽比，决定这Gabor核函数图像的椭圆率。
-想要具体了解每个参数的效果可以查看一个博客[具体参数比较程序](https://blog.csdn.net/lhanchao/article/details/55006663)
-
+```
+想要具体了解每个参数的效果可以查看一个博客[Gabor滤波简介与Opencv中的实现及参数变化实验](https://blog.csdn.net/lhanchao/article/details/55006663)
 # 获得高斯核
 ```
 Mat cv::getGaussianKernel (int ksize, 
