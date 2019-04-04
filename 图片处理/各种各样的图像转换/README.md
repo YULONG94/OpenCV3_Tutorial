@@ -278,6 +278,14 @@ void cv::adaptiveThreshold (InputArray src,
                             int thresholdType, 
                             int blockSize, 
                             double C)
+
+//例子：
+Mat src = imread("../data/1.jpg", 0);
+Mat result;
+adaptiveThreshold(src, result, 225, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 5, 10);
+imshow("origin", src);
+imshow("result", result);
+waitKey();
 ```
 # 颜色空间转化
 ```
@@ -285,6 +293,16 @@ void cv::cvtColor (InputArray src,
                    OutputArray dst, 
                    int code, 
                    int dstCn = 0)
+//例子：
+//Mat src = imread("../data/1.jpg");
+Mat src = Mat::ones(2, 2, CV_8UC3);
+Mat result;
+cvtColor(src, result, COLOR_BGR2Luv);
+/*imshow("origin", src);
+imshow("result", result);*/
+cout << src << endl;
+cout << src << endl;
+//waitKey();
 ```
 # cvtColorTwoPlane
 ```
