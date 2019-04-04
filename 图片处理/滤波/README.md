@@ -6,6 +6,7 @@ void cv::bilateralFilter (InputArray src,
                           double sigmaColor, 
                           double sigmaSpace, 
                           int borderType = BORDER_DEFAULT)
+			  
 d:过滤期间使用的各像素邻域的直径
 sigmaColor:色彩空间的sigma参数，该参数较大时，各像素邻域内相距较远的颜色会被混合到一起，
            从而造成更大范围的半相等颜色
@@ -34,6 +35,7 @@ void cv::blur (InputArray src,
                Size ksize, 
                Point anchor = Point(-1,-1), 
                int borderType = BORDER_DEFAULT)
+	       
 InputArray src: 输入图像 
 OutputArray dst: 输出图像
 Size ksize: 滤波模板kernel的尺寸，一般使用Size(w, h)来指定，如Size(3,3) 
@@ -67,6 +69,7 @@ void cv::buildPyramid (InputArray src,
                        OutputArrayOfArrays dst, 
                        int maxlevel, 
                        int borderType = BORDER_DEFAULT)
+		       
 src：输入图像
 dst：输出所有层的图像
 maxlevel：表示建立金字塔的层数
@@ -99,6 +102,7 @@ void cv::dilate (InputArray src,
                  int iterations = 1, 
                  int borderType = BORDER_CONSTANT, 
                  const Scalar & borderValue = morphologyDefaultBorderValue())
+		 
 src：输入图，可以多通道，深度可以CV_8U、CV_16U、CV_16S、CV_32F或CV_64F
 dst：输出图，和输入图相同
 kernel：结构元素，如果kernel=Mat()则为预设的3×3矩形，越大膨胀效果越明显
@@ -124,6 +128,7 @@ void cv::erode (InputArray src,
                 int iterations = 1, 
                 int borderType = BORDER_CONSTANT, 
                 const Scalar & borderValue = morphologyDefaultBorderValue())
+		
 与膨胀的参数设置一样，例子也可以直接替换
 ```
 # 卷积滤波
@@ -135,6 +140,7 @@ void cv::filter2D (InputArray src,
                    Point anchor = Point(-1,-1), 
                    double delta = 0, 
                    int borderType = BORDER_DEFAULT)
+		   
 // 注意边界类型，默认的是反射层，也就是说填充边界以外的方式是通过反射
 Mat img = imread("../data/1.jpg");
 Mat result;
@@ -152,6 +158,7 @@ void cv::GaussianBlur (InputArray src,
                        double sigmaX, 
                        double sigmaY = 0, 
                        int borderType = BORDER_DEFAULT)
+		       
 ksize:高斯核大小，ksize.width和ksize.height可以不同，但是都必须为正的奇数
      （或者为0，此时它们的值会自动由sigma进行计算）
 sigmaX:高斯核在x方向的标准差
@@ -211,6 +218,7 @@ Mat cv::getGaborKernel (Size ksize,
 Mat cv::getGaussianKernel (int ksize, 
                            double sigma, 
                            int ktype = CV_64F)
+			   
 返回n行1列归一化的一维高斯系数，将两个一维高斯核相乘就获得二维的高斯核
 结合Filter2D函数可以达到和GaussianBlur一样的效果
 // 例子
@@ -233,14 +241,21 @@ return 0;
 Mat cv::getStructuringElement (int shape, 
                                Size ksize, 
                                Point anchor = Point(-1,-1))
+			       
 这个函数的第一个参数表示内核的形状，有三种形状可以选择。
 矩形：MORPH_RECT;
 交叉形：MORPH_CORSS;
 椭圆形：MORPH_ELLIPSE;
 
-第二和第三个参数分别是内核的尺寸以及锚点的位置。一般在调用erode以及dilate函数之前，先定义一个Mat类型的变量来获得getStructuringElement函数的返回值。对于锚点的位置，有默认值Point（-1,-1），表示锚点位于中心点。element形状唯一依赖锚点位置，其他情况下，锚点只是影响了形态学运算结果的偏移。
+第二和第三个参数分别是内核的尺寸以及锚点的位置。一般在调用erode以及dilate函数之前，
+先定义一个Mat类型的变量来获得getStructuringElement函数的返回值。对于锚点的位置，
+有默认值Point（-1,-1），表示锚点位于中心点。element形状唯一依赖锚点位置，其他情况下，
+锚点只是影响了形态学运算结果的偏移。
+// 例如：
+Mat kernelx = getStructuringElement(MORPH_ELLIPSE, Size(5, 5));
+cout << kernelx << endl;
 ```
-# 拉普拉斯
+# 拉普拉斯滤波
 ```
 void cv::Laplacian (InputArray src, 
                     OutputArray dst, 
@@ -249,14 +264,35 @@ void cv::Laplacian (InputArray src,
                     double scale = 1, 
                     double delta = 0, 
                     int borderType = BORDER_DEFAULT)
+		    
+Laplace函数实现的方法是先用Sobel 算子计算二阶x和y导数，再求和。
+scale是缩放导数的比例常数，默认情况下没有伸缩系数；
+delta是一个可选的增量，将会加到最终的dst中，同样，默认情况下没有额外的值加到dst中；
+
+//例如：
+Mat src = imread("../data/1.jpg");
+Mat result;
+Laplacian(src, result, -1, 3, 1.0, 0.0, 4);
+imshow("result", result);
+waitKey();
 ```
 # 中值滤波
 ```
 void cv::medianBlur (InputArray src, 
                      OutputArray dst, 
                      int ksize)
+		     
+//这个函数使用起来可选的参数比较少，不多做介绍，功能也可以顾名思义
+//性能的话，可以说在处理噪点什么的有奇效，不过速度相当于线性的算子较慢
+
+//例如：
+Mat src = imread("../data/1.jpg");
+Mat result;
+medianBlur(src, result, 3);
+imshow("result", result);
+waitKey();
 ```
-# 型态滤波
+# 形态学变换
 ```
 void cv::morphologyEx (InputArray src, 
                        OutputArray dst, 
@@ -266,6 +302,24 @@ void cv::morphologyEx (InputArray src,
                        int iterations = 1, 
                        int borderType = BORDER_CONSTANT, 
                        const Scalar & borderValue = morphologyDefaultBorderValue())
+		       
+参数方面没什么需要多做介绍的，除了int op这一项，接受以下情况：
+0：MORPH_ERODE，就是erode
+1：MORPH_DILATE，就是dilate
+2：MORPH_OPEN，dst=open(src,element)=dilate(erode(src,element))称为开运算
+3：MORPH_CLOSE，dst=close(src,element)=erode(dilate(src,element))称为闭运算
+4：MORPH_GRADIENT，dst=morph_grad(src,element)=dilate(src,element)−erode(src,element)
+		   称为形态学梯度
+5：MORPH_TOPHAT，dst=tophat(src,element)=src−open(src,element)称为顶帽运算
+6：MORPH_BLACKHAT，dst=blackhat(src,element)=close(src,element)−src称为黑帽运算
+7：MORPH_HITMISS，击中击不中变换（只对CV_8UC1类型可用，可以用在二值图可以提取一些特定的形状）
+//例如：
+Mat src = imread("../data/1.jpg", 0);
+Mat result;
+Mat k = getStructuringElement(MORPH_RECT, Size(3, 3));
+morphologyEx(src, result, MORPH_OPEN, k);
+imshow("result", result);
+waitKey();
 ```
 # 下采样
 ```
