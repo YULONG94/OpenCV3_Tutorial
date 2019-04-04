@@ -327,6 +327,17 @@ void cv::pyrDown (InputArray src,
                   OutputArray dst, 
                   const Size & dstsize = Size(), 
                   int borderType = BORDER_DEFAULT)
+		  
+这个其实在另一篇笔记中记录过了，重新写一下
+// 下采样，图像变为原来的1/2，dstsize可以不设置
+// 如果设置dstsize，一定需要满足|dstsize.width * 2 - src.cols| ≤ 2;|dstsize.height * 2 - src.rows| ≤ 2; 否则会报错
+
+Mat A = imread("../data/1.jpg");
+Mat C;
+pyrDown(A, C);
+imshow("A", A);
+imshow("C", C);
+waitKey();
 ```
 # pyrMeanShiftFiltering
 ```
@@ -336,6 +347,47 @@ void cv::pyrMeanShiftFiltering (InputArray src,
                                 double sr, 
                                 int maxLevel = 1, 
                                 TermCriteria termcrit = TermCriteria(TermCriteria::MAX_ITER+TermCriteria::EPS, 5, 1))
+
+均值漂移算法：一种通用的聚类算法，它的基本原理是：对于给定的一定数量样本，任选其中一个样本，以该样本为中心点划定一个圆形区域，求
+取该圆形区域内样本的质心，即密度最大处的点，再以该点为中心继续执行上述迭代过程，直至最终收敛。可以利用均值偏移算法的这个特性，实
+现彩色图像分割。这个函数严格来说并不是图像的分割，而是图像在色彩层面的平滑滤波，它可以中和色彩分布相近的颜色，平滑色彩细节，侵蚀
+掉面积较小的颜色区域。
+
+第一个参数src，输入图像，8位，三通道的彩色图像，并不要求必须是RGB格式，HSV、YUV等Opencv中的彩色图像格式均可；
+第二个参数dst，输出图像，跟输入src有同样的大小和数据格式；
+第三个参数sp，定义的漂移物理空间半径大小；
+第四个参数sr，定义的漂移色彩空间半径大小；
+//这两个参数越大，计算需要的时间也会更加久，效果也更明显
+第五个参数maxLevel，定义金字塔的最大层数；
+第六个参数termcrit，定义的漂移迭代终止条件，可以设置为迭代次数满足终止，迭代目标与中心点偏差满足终止，或者两者的结合；
+
+// 例如：
+Mat src = imread("../data/1.jpg");
+Mat result;
+pyrMeanShiftFiltering(src, result, 10, 10, 1);
+imshow("result", result);
+waitKey();
+
+meanShift均值偏移算法主要对彩色图像进行平滑操作，为了达到分割的目的，需要借助另外一个漫水填充函数（floodFill）
+这里先补充一这个函数的形式，具体的会在：
+
+int cv::floodFill (InputOutputArray image, 
+		   InputOutputArray mask, 
+		   Point seedPoint, 
+		   Scalar newVal, 
+		   Rect * rect = 0, 
+		   Scalar loDiff = Scalar(), 
+		   Scalar upDiff = Scalar(), 
+		   int flags = 4)
+或者不适用mask：
+int cv::floodFill (InputOutputArray image, 
+		   Point seedPoint, 
+		   Scalar newVal, 
+		   Rect * rect = 0, 
+		   Scalar loDiff = Scalar(), 
+		   Scalar upDiff = Scalar(), 
+		   int flags = 4)
+
 ```
 # 上采样
 ```
@@ -343,6 +395,14 @@ void cv::pyrUp (InputArray src,
                 OutputArray dst, 
                 const Size & dstsize = Size(), 
                 int borderType = BORDER_DEFAULT)
+
+// 与下采样相对
+Mat A = imread("../data/1.jpg");
+Mat B;
+pyrUp(A, B);
+imshow("A", A);
+imshow("B", B);
+waitKey();
 ```
 # Scharr
 ```
