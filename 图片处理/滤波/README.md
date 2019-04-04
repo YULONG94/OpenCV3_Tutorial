@@ -369,7 +369,7 @@ imshow("result", result);
 waitKey();
 
 meanShift均值偏移算法主要对彩色图像进行平滑操作，为了达到分割的目的，需要借助另外一个漫水填充函数（floodFill）
-这里先补充一这个函数的形式，具体的会在：
+这里先补充一这个函数的形式，具体的会在《各种各样的图像转换》笔记中进行介绍。
 
 int cv::floodFill (InputOutputArray image, 
 		   InputOutputArray mask, 
@@ -379,7 +379,7 @@ int cv::floodFill (InputOutputArray image,
 		   Scalar loDiff = Scalar(), 
 		   Scalar upDiff = Scalar(), 
 		   int flags = 4)
-或者不适用mask：
+或者不使用mask：
 int cv::floodFill (InputOutputArray image, 
 		   Point seedPoint, 
 		   Scalar newVal, 
@@ -404,7 +404,7 @@ imshow("A", A);
 imshow("B", B);
 waitKey();
 ```
-# Scharr
+# Scharr滤波器
 ```
 void cv::Scharr (InputArray src, 
                  OutputArray dst, 
@@ -414,6 +414,23 @@ void cv::Scharr (InputArray src,
                  double scale = 1,
                  double delta = 0, 
                  int borderType = BORDER_DEFAULT)
+
+对于小一点的核（3x3）而言，使用Sobel算子近似计算导数的缺点是精度比较低
+Scbarr滤波器同sobel滤波器一样快，但是准确率更高，故当你利用3x3滤波器实现图像度量的时候应该使用Scharr滤波器
+
+dx：x方向导数的阶数
+dy：y方向导数的阶数
+scale：放缩的尺度，默认为零
+delta：漂移数值，默认为零
+
+注意：经验证，dx和dy有且只有一个能为1，另一个必须为零，从而实现求这个方向上的一阶导数
+
+//例如：
+Mat src = imread("../data/1.jpg");
+Mat result;
+Scharr(src, result, -1, 1, 0, 1, 0);
+imshow("result", result);
+waitKey();
 ```
 # sepFilter2D
 ```
@@ -425,8 +442,29 @@ void cv::sepFilter2D (InputArray src,
                       Point anchor = Point(-1,-1), 
                       double delta = 0, 
                       int borderType = BORDER_DEFAULT)
+
+用分解的核函数对图像做卷积：
+首先，图像的每一行与一维的核kernelX做卷积；
+然后，运算结果的每一列与一维的核kernelY做卷积
+
+ddepth支持如下情况：
+src.depth() = CV_8U, ddepth = -1/CV_16S/CV_32F/CV_64F
+src.depth() = CV_16U/CV_16S, ddepth = -1/CV_32F/CV_64F
+src.depth() = CV_32F, ddepth = -1/CV_32F/CV_64F
+src.depth() = CV_64F, ddepth = -1/CV_64F
+
+//例如：
+Mat src = imread("../data/1.jpg");
+Mat result;
+Mat kx = (Mat_<float>(1, 3) << 0, -1, 0);
+Mat ky = (Mat_<float>(1, 3) << -1, 0, -1);
+sepFilter2D(src, result, src.depth(), kx, ky, Point(-1, -1), 0, BORDER_DEFAULT);
+imshow("result", result);
+waitKey();
+
+
 ```
-# Sobel
+# Sobel滤波器
 ```
 void cv::Sobel (InputArray src, 
                 OutputArray dst, 
