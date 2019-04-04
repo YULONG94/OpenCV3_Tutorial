@@ -11,6 +11,7 @@ void cv::remap (InputArray src,
 // dst:输出图像
 // map1:x坐标的转化表（CV_16SC2 , CV_32FC1, or CV_32FC2）
 // map2:y坐标的转化表
+// 如果map1的形式是(x,y)，那么map2可以是None
 // interpolation:差值方式, 下图中除了INTER_AREA
 // borderMode:边界
 // borderValue:边界的数值，默认为0
