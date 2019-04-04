@@ -198,16 +198,12 @@ Mat cv::getGaborKernel (Size ksize,
                         double psi = CV_PI *0.5, 
                         int ktype = CV_64F)
 
-之前对这个核并不了解，研究了一下，觉得很有意思，下面多一些篇幅说明以下
-首先，这个核可以结合Filter2D滤波器进行使用，二维Gabor函数的数学表达如下（OpenCV 里好像只用到了实数部分）
-
-这里面的参数： 
-（1）x,yx,y分别表示像素坐标位置； 
-（2）λλ表示滤波的波长； 
-（3）θθ表示Gabor核函数图像的倾斜角度； 
-（4）ψψ表示相位偏移量，取值范围是-180~180； 
-（5）σσ表示高斯函数的标准差； 
-（6）γγ表示长宽比，决定这Gabor核函数图像的椭圆率。
+这个核可以结合Filter2D滤波器进行使用，参数：
+λ表示滤波的波长； 
+θ表示Gabor核函数图像的倾斜角度； 
+ψ表示相位偏移量，取值范围是-180~180； 
+σ表示高斯函数的标准差； 
+γ表示长宽比，决定这Gabor核函数图像的椭圆率。
 ```
 想要具体了解每个参数的效果可以查看一个博客[Gabor滤波简介与Opencv中的实现及参数变化实验](https://blog.csdn.net/lhanchao/article/details/55006663)
 # 获得高斯核
@@ -215,6 +211,22 @@ Mat cv::getGaborKernel (Size ksize,
 Mat cv::getGaussianKernel (int ksize, 
                            double sigma, 
                            int ktype = CV_64F)
+返回n行1列归一化的一维高斯系数，将两个一维高斯核相乘就获得二维的高斯核
+结合Filter2D函数可以达到和GaussianBlur一样的效果
+// 例子
+Mat src = Mat::eye(10, 10, CV_8UC1);
+Mat kernelx = getGaussianKernel(3, 0.8);
+Mat kernely = getGaussianKernel(3, 0.8);
+Mat kernel2d = kernelx * kernely.t();
+Mat result1, result2;
+filter2D(src, result1, -1, kernel2d);
+GaussianBlur(src, result2, Size(3, 3), 0.8);
+imshow("result2", result2);
+imshow("result1", result1);
+cout << result1 << endl;
+cout << result2 << endl;
+waitKey();
+return 0;
 ```
 # getStructureeement
 ```
