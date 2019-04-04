@@ -14,6 +14,7 @@ void cv::remap (InputArray src,
 // interpolation:差值方式, 下图中除了INTER_AREA
 // borderMode:边界
 // borderValue:边界的数值，默认为0
+运算公式为：dst(x,y)=src(mapx(x,y),mapy(x,y))
 ```
 ![Image text](https://github.com/YULONG94/OpenCV3_Tutorial/blob/master/images/InterpolationFlags.PNG)
 ![Image text](https://github.com/YULONG94/OpenCV3_Tutorial/blob/master/images/BorderTypes.PNG)
