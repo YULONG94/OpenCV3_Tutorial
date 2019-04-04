@@ -180,7 +180,7 @@ void cv::getDerivKernels (OutputArray kx,
 dx和dy为所设置的两个方向的阶数，一阶就表示像素的梯度（一阶导），二阶就是梯度的梯度（二阶导）
 ksize为需要的核的大小
 通过normalize的设置，可以获得归一化之后的核
-这个和下面的两个函数都是为了方便设计过滤核
+这个和下面的几个函数都是为了方便设计过滤核
 
 //例子：
 Mat kx, ky;
@@ -228,11 +228,17 @@ cout << result2 << endl;
 waitKey();
 return 0;
 ```
-# getStructureeement
+# 其他的一些预设定核
 ```
 Mat cv::getStructuringElement (int shape, 
                                Size ksize, 
                                Point anchor = Point(-1,-1))
+这个函数的第一个参数表示内核的形状，有三种形状可以选择。
+矩形：MORPH_RECT;
+交叉形：MORPH_CORSS;
+椭圆形：MORPH_ELLIPSE;
+
+第二和第三个参数分别是内核的尺寸以及锚点的位置。一般在调用erode以及dilate函数之前，先定义一个Mat类型的变量来获得getStructuringElement函数的返回值。对于锚点的位置，有默认值Point（-1,-1），表示锚点位于中心点。element形状唯一依赖锚点位置，其他情况下，锚点只是影响了形态学运算结果的偏移。
 ```
 # 拉普拉斯
 ```
