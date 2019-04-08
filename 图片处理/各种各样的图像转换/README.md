@@ -310,6 +310,7 @@ void cv::cvtColorTwoPlane (InputArray src1,
                            InputArray src2, 
                            OutputArray dst, 
                            int code)
+很遗憾，这个没看懂是用来做什么的，有机会碰到的话在研究
 ```
 # distanceTransform
 ```
@@ -319,6 +320,47 @@ void cv::distanceTransform (InputArray src,
                             int distanceType, 
                             int maskSize, 
                             int labelType = DIST_LABEL_CCOMP)
+void cv::distanceTransform (InputArray src, 
+                            OutputArray dst, 
+                            int distanceType, 
+                            int maskSize, 
+                            int dstType = CV_32F)
+
+//计算图像中每一个非零点距离离自己最近的零点的距离
+//用来做物体轮廓的细化，也可以用来查找物体的质心
+//第一种形式与维诺图的生成有关，暂时不需要，所以先不学，使用第二种就可以了
+//以获得物体质心为例，假如我们的图是一个实心的五角星，除五角星以外都是白色
+Mat src = imread("../data/1.jpg", 0);
+Mar result;
+src.copyTo(result);
+src = ~src;  //需要取反操作，因为黑色的才是图像的零点
+Point center(0, 0);
+Mat BW_src;
+threshold(src, BW_src, 20,200,CV_THRESH_BINARY)
+Mat imageThin(imageGray.size(),CV_32FC1); //定义保存距离变换结果的Mat矩阵
+distanceTransform(imageGray,imageThin,CV_DIST_L2,3);  //距离变换，dstType接收默认值
+Mat distanse_show;
+distShow=Mat::zeros(imageGray.size(),CV_8UC1); //用于展示五角星每个点的高度（离外围的距离）
+double value_max = 0.0;
+for(int i = 0; i < src.rows; i++)
+{
+    for(int j = 0; j < src.cols; j++)
+    {
+        distance_show<uchar>(i, j) = imageThin<float>(i, j);
+        if(imageThin.at<float>(i, j) > value_max)
+        {
+            value_max=imageThin.at<float>(i,j);  //获取距离变换的极大值
+            center = Point(i, j);
+        }
+    }
+}
+normalize(distShow,distShow,0,255,CV_MINMAX); //为了显示清晰，做了0~255归一化
+circle(result, center, value_max, Scalar(0, 255, 0), 3); //以质心为圆心，最大距离为半径画圆
+                                                         //其实就是画了五角星的内接圆
+circle(result, center, 3, Scalar(0, 0, 255), 3);  // 标出五角星的质心
+imshow("result", result);
+imshow("distance_show", distance_show);
+waitKey();
 ```
 # floodFill
 ```
@@ -330,7 +372,20 @@ int cv::floodFill (InputOutputArray image,
                    Scalar loDiff = Scalar(), 
                    Scalar upDiff = Scalar(), 
                    int flags = 4)
+
+int cv::floodFill (InputOutputArray image, 
+                   Point seedPoint, 
+                   Scalar newVal, 
+                   Rect * rect = 0, 
+                   Scalar loDiff = Scalar(), 
+                   Scalar upDiff = Scalar(), 
+                   int flags = 4)
+
+// 关于这个函数，找到一个非常详细的例子,见下面的链接
+// 关于flags其实有很多设置，可以控制是否对原图像进行更改，mask的填充颜色，以及邻域的选择模式
+// 这个函数起到的作用类似与ps的魔术棒工具，可以通过鼠标点击选中附近相似的区域
 ```
+[OpenCv漫水填充floodFill详解]https://blog.csdn.net/weixin_42296411/article/details/80966724
 # grabCut
 ```
 void cv::grabCut (InputArray img, 
@@ -340,6 +395,59 @@ void cv::grabCut (InputArray img,
                   InputOutputArray fgdModel, 
                   int iterCount, 
                   int mode = GC_EVAL)
+
+// grabcut算法的效果很好，但是花的时间也很长
+// 基本思路就是用一个框圈住前景（我们在意的物体），保证框外面的一定是背景，但是对内部的像素点可以是背景，也可以是前景。
+// 举个例子，下面有两种方式，可以分开也可以结合使用，根本目的就是提供足够多的信息用于分割，每个像素点都有四种可能的值
+// GC_BGD    = 0,  //背景
+// GC_FGD    = 1,  //前景 
+// GC_PR_BGD = 2,  //可能背景
+// GC_PR_FGD = 3   //可能前景 
+cv::Mat image= cv::imread("../tower.jpg");
+// 矩形外的像素是背景 
+cv::Rect rectangle(50,70,image.cols-150,image.rows-180);
+
+// 第一种方式：rect方式
+cv::Mat result;
+//两个临时矩阵变量，作为算法的中间变量使用，不用care
+cv::Mat bgModel,fgModel; 
+
+// GrabCut 分段
+cv::grabCut(image,    //输入图像
+            result,   //分段结果
+            rectangle,// 包含前景的矩形 
+            bgModel,fgModel, // 前景、背景
+            1,        // 迭代次数
+            cv::GC_INIT_WITH_RECT); // 用矩形
+    
+// 得到可能是前景的像素
+//比较函数保留值为GC_PR_FGD的像素
+cv::compare(result,cv::GC_PR_FGD,result,cv::CMP_EQ);
+// 产生输出图像
+cv::Mat foreground(image.size(),CV_8UC3,cv::Scalar(255,255,255));
+//背景值为 GC_BGD=0，作为掩码
+image.copyTo(foreground,result); 
+
+// 或第二种方式：mask方式
+cv::Mat result1= cv::Mat(image1.rows, image1.cols,CV_8UC1, cv::Scalar(cv::GC_BGD));
+//注意给子矩阵赋值的方法
+cv::Mat roi(result1, cv::Rect(50,70,result1.cols-150,result.rows-180));
+roi = cv::Scalar(cv::GC_PR_FGD);
+// GrabCut 分段
+cv::grabCut(image1,    //输入图像
+            result1,   //分段结果
+            rectangle,// 包含前景的矩形 
+            bgModel,fgModel, // 前景、背景
+            1,        // 迭代次数
+            cv::GC_INIT_WITH_MASK); // 用Mask
+
+// 得到可能是前景的像素
+//比较函数保留值为GC_PR_FGD的像素
+cv::compare(result1,cv::GC_PR_FGD,result,cv::CMP_EQ);
+// 产生输出图像
+cv::Mat foreground1(image1.size(),CV_8UC3,cv::Scalar(255,255,255));
+//背景值为 GC_BGD=0，作为掩码
+image.copyTo(foreground1,result1); 
 ```
 # integral
 ```
