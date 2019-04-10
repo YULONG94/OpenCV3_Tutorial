@@ -465,6 +465,16 @@ void cv::integral (InputArray src,
                    OutputArray tilted, 
                    int sdepth = -1 
                    int sqdepth = -1) 
+
+// 一个用于计算图像积分图的函数
+// 三种重载函数分别计算经典积分，平方积分以及斜角积分
+// 斜角积分这个词我自己随便取的，意思是需要统计的像素是经典积分中那些在45度直线以下的像素点
+// 一般估计第一种用的最多
+// 随便举个例子
+Mat m1 = Mat::ones(3, 3, CV_8UC1);
+Mat sum1 = Mat::zeros(4, 4, CV_32FC1);
+integral(m1, sum1);
+cout << sum1 << endl;
 ```
 # threshold
 ```
@@ -473,9 +483,91 @@ double cv::threshold (InputArray src,
                       double thresh, 
                       double maxval, 
                       int type)
+
+// 最基础的二值化函数
+// 前面两个分别是输入和输出Mat
+// 第三个是阈值
+// 第四个是达到阈值之后的数值
+// 最后一个是表示阈值操作类型，总共有8种，见最上面ThresholdTypes的枚举结果
+
+// 举个简单的例子
+Mat m1 = Mat::ones(3, 3, CV_8UC1);
+Mat m2 = Mat::eye(3, 3, CV_8UC1);
+Mat m3 = Mat::ones(3, 3, CV_8UC1);
+Mat r = m1 + m2 + m3;
+cout << r << endl;
+
+
+Mat result;
+threshold(r, result, 2, 5, 1);
+cout << result << endl;
 ```
 # watershed
 ```
 void cv::watershed (InputArray image, 
                     InputOutputArray markers)
+
+// 传说中的分水岭算法
+// 基本步骤如下
+// 1. 图像灰度化、滤波、Canny边缘检测
+// 2. 查找轮廓，并且把轮廓信息按照不同的编号绘制到watershed的第二个入参markers上，相当于标记注水点。
+// 3. watershed分水岭运算
+// 4. 绘制分割出来的区域，视觉控还可以使用随机颜色填充，或者跟原始图像融合以下，以得到更好的显示效果。
+
+// 举个例子
+Mat src = imread("D://data//smarties.png");
+imshow("原图", src);
+
+Mat src_gray;
+cvtColor(src, src_gray, COLOR_BGR2GRAY);
+imshow("灰度图", src_gray);
+
+Mat src_BW;
+adaptiveThreshold(src_gray, src_BW, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 5, 10);
+imshow("二值图", src_BW);
+
+Mat src_canny;
+Canny(src_BW,src_canny, 50, 200);
+imshow("canny", src_canny);
+
+vector<vector<Point>> contours;
+vector<Vec4i> hierarchy;
+findContours(src_canny, contours, hierarchy, RETR_CCOMP, CHAIN_APPROX_SIMPLE);
+
+Mat maskWaterShed(src_canny.size(), CV_32S);
+maskWaterShed = Scalar::all(0);
+for (int i = 0; i < contours.size(); i++)
+{
+	drawContours(maskWaterShed, contours, i, Scalar::all(i + 1), -1, 8, hierarchy, INT_MAX);
+}
+// 直接展示的话你一定看不出来什么，可能因为这里的格式是CV_32S，尝试转化成CV_8UC1是可以画出来的
+imshow("所谓的makers", maskWaterShed);
+watershed(src, maskWaterShed);
+
+Mat wshed(maskWaterShed.size(), CV_8UC3);
+vector<Vec3b> colorTab;
+for (int i = 0; i < contours.size(); i++)
+{
+	int b = theRNG().uniform(0, 255);
+	int g = theRNG().uniform(0, 255);
+	int r = theRNG().uniform(0, 255);
+
+	colorTab.push_back(Vec3b((uchar)b, (uchar)g, (uchar)r));
+}
+// paint the watershed image
+for (int i = 0; i < maskWaterShed.rows; i++)
+	for (int j = 0; j < maskWaterShed.cols; j++)
+	{
+		int index = maskWaterShed.at<int>(i, j);
+		if (index == -1)
+			wshed.at<Vec3b>(i, j) = Vec3b(255, 255, 255);
+		else if (index <= 0 || index > contours.size())
+			wshed.at<Vec3b>(i, j) = Vec3b(0, 0, 0);
+		else
+			wshed.at<Vec3b>(i, j) = colorTab[index - 1];
+	}
+
+// wshed = wshed * 0.5 + imgGray * 0.5;
+imshow("watershed transform", wshed);
+waitKey();
 ```
