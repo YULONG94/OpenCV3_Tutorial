@@ -1,0 +1,10 @@
+# cv::MarkerTypes
+```
+cv::MARKER_CROSS = 0, 
+cv::MARKER_TILTED_CROSS = 1, 
+cv::MARKER_STAR = 2, 
+cv::MARKER_DIAMOND = 3, 
+cv::MARKER_SQUARE = 4, 
+cv::MARKER_TRIANGLE_UP = 5, 
+cv::MARKER_TRIANGLE_DOWN = 6 
+```
