@@ -1,4 +1,4 @@
-查看[官方文档]https://docs.opencv.org/3.4.2/d3/dc0/group__imgproc__shape.html
+查看[官方文档]"https://docs.opencv.org/3.4.2/d3/dc0/group__imgproc__shape.html"
 # ConnectedComponentsAlgorithmsTypes
 ```
   cv::CCL_WU = 0, 
