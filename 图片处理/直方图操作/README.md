@@ -68,7 +68,7 @@ imshow("测试图反向投影", backProjectionImg2);
 
 waitKey();
 ```
-上面的例子是我自己测试时用的，也可以查看一个博客[calcBackProject 直方图反射函数]https://blog.csdn.net/kakiebu/article/details/79522547
+上面的例子是我自己测试时用的，也可以查看一个博客[calcBackProject 直方图反射函数](https://blog.csdn.net/kakiebu/article/details/79522547)
 # 直方图计算
 ```
 void cv::calcHist (const Mat * images, 
