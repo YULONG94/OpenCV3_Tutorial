@@ -262,7 +262,25 @@ void cv::HoughCircles (InputArray image,
                        double param2 = 100, 
                        int minRadius = 0, 
                        int maxRadius = 0)
-
+// 直接举个例子
+Mat image_color = cv::imread("D://data//water_coins.jpg", cv::IMREAD_COLOR);
+Mat img_gray;
+cvtColor(image_color, img_gray, CV_BGR2GRAY);
+vector<Vec3f> circles;
+HoughCircles(img_gray, circles, HOUGH_GRADIENT, 2, img_gray.rows/16, 200, 100);
+cout << circles.size() << endl;
+for (size_t i = 0; i < circles.size(); i++)
+{
+	Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
+	int radius = cvRound(circles[i][2]);
+	// draw the circle center
+	circle(image_color, center, 3, Scalar(0, 255, 0), -1, 8, 0);
+	// draw the circle outline
+	circle(image_color, center, radius, Scalar(0, 0, 255), 3, 8, 0);
+}
+namedWindow("circles", 1);
+imshow("circles", image_color);
+waitKey();
 ```
 # houge直线检测
 ```
@@ -275,7 +293,24 @@ void cv::HoughLines (InputArray image,
                      double stn = 0, 
                      double min_theta = 0, 
                      double max_theta = CV_PI)
-
+//直接举个例子
+vector<Vec4i> lines;
+HoughLines(canny_frame, lines, 2, CV_PI / 90, 150, 100, 0);
+// 依次画出
+for (int i = 0; i < lines.size(); i++)
+{
+	float rho = lines[i][0], theta = lines[i][1];
+	if (theta > CV_PI / 90)
+		continue;
+	Point pt1, pt2;
+	double a = cos(theta), b = sin(theta);
+	double x0 = a * rho, y0 = b * rho;
+	pt1.x = cvRound(x0 + 1000 * (-b));
+	pt1.y = cvRound(y0 + 1000 * (a));
+	pt2.x = cvRound(x0 - 1000 * (-b));
+	pt2.y = cvRound(y0 - 1000 * (a));
+	line(line_frame, pt1, pt2, Scalar(0, 0, 255), 1, CV_AA);
+}
 ```
 # houge直线概率检测
 ```
@@ -286,7 +321,14 @@ void cv::HoughLinesP (InputArray image,
                       int threshold, 
                       double minLineLength = 0, 
                       double maxLineGap = 0)
-
+//直接举个例子
+vector<Vec4i> lines;
+HoughLinesP(BW_frame, lines, 1, CV_PI / 180, 100, 400, 3);
+for (int i = 0; i < lines.size(); i++)
+{
+	Vec4i l = lines[i];//Vec4i 就是Vec<int, 4>，里面存放４个int
+	line(line_frame, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0, 0, 255), 1, CV_AA);
+}
 ```
 # 利用标准houge转化进行直线拟合
 ```
