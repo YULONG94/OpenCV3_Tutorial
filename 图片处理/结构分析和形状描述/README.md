@@ -480,7 +480,7 @@ int cv::rotatedRectangleIntersection (const RotatedRect & rect1,
 				      OutputArray intersectingRegion)
 
 // 如果有交点，返回整数，且把交界储存在最后一个参数内（最多有八个点）
-// 具体的交点情况可以见下图
+// 具体的交点情况可以见下图，算了，github上传图片太难了，想看的话去官网吧，（作为这里的网管，我说了算，/滑稽）
 ```
 
 # 判断是否是凸形状
