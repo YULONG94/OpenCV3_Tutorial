@@ -129,6 +129,17 @@ Rect cv::boundingRect (InputArray points)
 RotatedRect cv::minAreaRect (InputArray points)
 // 同样参见上面的例子
 ```
+# 计算最小外接圆
+```
+void cv::minEnclosingCircle (InputArray points, 
+			     Point2f & center, 
+			     float & radius)
+```
+# 计算最小外接三角形
+```
+double cv::minEnclosingTriangle (InputArray points, 
+				 OutputArray triangle)
+```
 # 获得旋转矩形的四个顶点
 ```
 void cv::boxPoints (RotatedRect box, 
@@ -289,7 +300,7 @@ void cv::findContours (InputOutputArray image,
 
 // 这个函数前面已经用了很多次了，这里就不重复写代码了
 ```
-# 最小椭圆外轮廓
+# 轮廓的椭圆拟合1
 ```
 RotatedRect cv::fitEllipse (InputArray points)
 //举个例子
@@ -315,4 +326,175 @@ for (int i = 0; i < contour.size(); i++)
 }
 imshow("结果", dst_img);
 waitKey();
+```
+# 轮廓的椭圆拟合2
+```
+RotatedRect cv::fitEllipseAMS (InputArray points)
+// 可以使用上面的例子直接替换对应的函数就可以了
+```
+# 轮廓的椭圆拟合3
+```
+RotatedRect cv::fitEllipseDirect (InputArray points)
+// 同样的直接替换想应的函数就可以了
+```
+# 直线拟合
+```
+void cv::fitLine (InputArray points, 
+		  OutputArray line, 
+		  int distType, 
+		  double param, 
+		  double reps, 
+		  double aeps)
+
+// 例子
+//创建一个用于绘制图像的空白图  
+cv::Mat image = cv::Mat::zeros(480, 640, CV_8UC3);
+
+//输入拟合点  
+std::vector<cv::Point> points;
+points.push_back(cv::Point(48, 58));
+points.push_back(cv::Point(105, 98));
+points.push_back(cv::Point(155, 160));
+points.push_back(cv::Point(212, 220));
+points.push_back(cv::Point(248, 260));
+points.push_back(cv::Point(320, 300));
+points.push_back(cv::Point(350, 360));
+points.push_back(cv::Point(412, 400));
+
+//将拟合点绘制到空白图上  
+for (int i = 0; i < points.size(); i++)
+{
+	cv::circle(image, points[i], 5, cv::Scalar(0, 0, 255), 2, 8, 0);
+}
+
+cv::Vec4f line_para;
+cv::fitLine(points, line_para, cv::DIST_L2, 0, 1e-2, 1e-2);
+
+std::cout << "line_para = " << line_para << std::endl;
+
+//获取点斜式的点和斜率  
+cv::Point point0;
+point0.x = line_para[2];
+point0.y = line_para[3];
+
+double k = line_para[1] / line_para[0];
+
+//计算直线的端点(y = k(x - x0) + y0)  
+cv::Point point1, point2;
+point1.x = 0;
+point1.y = k * (0 - point0.x) + point0.y;
+point2.x = 640;
+point2.y = k * (640 - point0.x) + point0.y;
+
+cv::line(image, point1, point2, cv::Scalar(0, 255, 0), 2, 8, 0);
+
+cv::imshow("image", image);
+cv::waitKey(0);
+```
+# 计算矩
+```
+Moments cv::moments (InputArray array,
+		     bool binaryImage = false)
+返回的Moments类型变量具有如下的一些值
+空间矩：
+m00, m01, m02, m10, m11, m12, m20, m21, m03, m30
+中心矩：
+mu20, mu11, mu02, mu30, mu21, mu12, mu03
+中心归一化矩：
+nu20, nu11, nu02, nu30, nu21, nu12, nu03
+// 通过计算轮廓的矩可以得到质心
+RNG rng;
+Mat src = imread("D://data//stars.jpg");
+Mat src_gray;
+cvtColor(src, src_gray, CV_BGR2GRAY);
+// blur(src_gray, src_gray, Size(3, 3));
+imshow("灰度图", src_gray);
+Mat src_canny;
+Mat src_BW;
+// Canny(src_gray, src_canny, 100, 200);
+threshold(src_gray, src_BW, 200, 255, 1);
+// imshow("canny", src_canny);
+imshow("src_BW", src_BW);
+vector<vector<Point>> contours;
+vector<Vec4i> hierarchy;
+findContours(src_BW, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
+vector<Moments> mu(contours.size());
+for (int i = 0; i < contours.size(); i++)
+{
+	mu[i] = moments(contours[i], false);
+}
+vector<Point2f> mc(contours.size());
+for (int i = 0; i < contours.size(); i++)
+{
+	mc[i] = Point2f(mu[i].m10 / mu[i].m00, mu[i].m01/mu[i].m00);
+}
+// 画出轮廓可质心
+Mat drawing = Mat(src_BW.size(), CV_8UC3);
+drawing = Scalar::all(0);
+for (int i = 0; i < contours.size(); i++)
+{
+	Scalar color = Scalar(rng.uniform(0, 255), rng.uniform(0, 255), rng.uniform(0, 255));
+	drawContours(drawing, contours, i, color, 2, 8, hierarchy, 0, Point(0, 0));
+	circle(drawing, mc[i], 4, Scalar(0, 0, 255), -1, 8, 0);
+}
+imshow("结果", drawing);
+waitKey();
+```
+# 计算不变矩
+```
+void cv::HuMoments (const Moments & moments, double hu[7])
+void cv::HuMoments (const Moments & m, OutputArray hu)
+// 图像轮廓的不变矩具有变换的不变性，可以用于进行模式匹配
+// 至于怎么得到的，主要是通过moments中的中心归一化矩，计算公式的话可以查看官网
+// 网上看直接使用这些来匹配形况的好像比较少，因为可以直接使用matchshape这样的函数来进行比较
+```
+# 形状匹配
+```
+double cv::matchShapes (InputArray contour1, 
+			InputArray contour2, 
+			int method, 
+			double parameter)
+
+// 对两个轮廓进行匹配，返回的数值越大说明两个形状差的越远
+// 匹配的方法的话有三种
+// 举个例子
+double c1 = matchShapes(contours[0], contours[1], CV_CONTOURS_MATCH_I1, 0.0);
+cout << "CV_CONTOURS_MATCH_I1    " << c1 << endl;
+double c2 = matchShapes(contours[0], contours[1], CV_CONTOURS_MATCH_I2, 0.0);
+cout << "CV_CONTOURS_MATCH_I2    " << c2 << endl;
+double c3 = matchShapes(contours[0], contours[1], CV_CONTOURS_MATCH_I3, 0.0);
+cout << "CV_CONTOURS_MATCH_I3    " << c3 << endl;
+// 上面这段代码可以直接插到前面计算moments的代码中去
+```
+# 找两个凸形状的交点
+```
+float cv::intersectConvexConvex (InputArray _p1, 
+				 InputArray _p2, 
+				 OutputArray _p12, 
+				 bool handleNested = true)
+```
+# 找两个旋转矩形的交点情况
+```
+int cv::rotatedRectangleIntersection (const RotatedRect & rect1, 
+				      const RotatedRect & rect2, 
+				      OutputArray intersectingRegion)
+
+// 如果有交点，返回整数，且把交界储存在最后一个参数内（最多有八个点）
+// 具体的交点情况可以见下图
+```
+
+# 判断是否是凸形状
+```
+bool cv::isContourConvex (InputArray contour)
+```
+# 判断一个点是否在轮廓内，轮廓外或者轮廓上
+```
+double cv::pointPolygonTest (InputArray contour, 
+			     Point2f pt, 
+			     bool measureDist)
+
+// 返回值有三种可能性
+// -1：外部
+// 0：上
+// 1：内部
 ```
