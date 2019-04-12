@@ -251,7 +251,7 @@ Ptr<FastLineDetector> cv::ximgproc::createFastLineDetector (int _length_threshol
 ```
 [官方fld_lines.cpp](https://docs.opencv.org/3.4.2/d1/d9e/fld_lines_8cpp-example.html#a8)
 [官方lsd_lines.cpp](https://docs.opencv.org/3.4.2/d8/dd4/lsd_lines_8cpp-example.html#a10)
-# houge圆检测
+# hough圆检测
 ```
 void cv::HoughCircles (InputArray image, 
                        OutputArray circles, 
@@ -282,7 +282,7 @@ namedWindow("circles", 1);
 imshow("circles", image_color);
 waitKey();
 ```
-# houge直线检测
+# hough直线检测
 ```
 void cv::HoughLines (InputArray image, 
                      OutputArray lines, 
@@ -312,7 +312,7 @@ for (int i = 0; i < lines.size(); i++)
 	line(line_frame, pt1, pt2, Scalar(0, 0, 255), 1, CV_AA);
 }
 ```
-# houge直线概率检测
+# hough直线概率检测
 ```
 void cv::HoughLinesP (InputArray image, 
                       OutputArray lines, 
@@ -330,7 +330,7 @@ for (int i = 0; i < lines.size(); i++)
 	line(line_frame, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0, 0, 255), 1, CV_AA);
 }
 ```
-# 利用标准houge转化进行直线拟合
+# 利用标准hough转化进行直线拟合
 ```
 void cv::HoughLinesPointSet (InputArray _point, 
                              OutputArray _lines, 
