@@ -342,7 +342,48 @@ void cv::HoughLinesPointSet (InputArray _point,
                              double min_theta, 
                              double max_theta, 
                              double theta_step)
+// 对于指定的点集使用标准的hough直线检测进行直线拟合
+// 举个例子
+Mat lines;
+vector<Vec3d> line3d;
+vector<Point2f> point;
+const static float Points[20][2] = {
+	{ 0.0f,   369.0f },{ 10.0f,  364.0f },{ 20.0f,  358.0f },{ 30.0f,  352.0f },
+{ 40.0f,  346.0f },{ 50.0f,  341.0f },{ 60.0f,  335.0f },{ 70.0f,  329.0f },
+{ 80.0f,  323.0f },{ 90.0f,  318.0f },{ 100.0f, 312.0f },{ 110.0f, 306.0f },
+{ 120.0f, 300.0f },{ 130.0f, 295.0f },{ 140.0f, 289.0f },{ 150.0f, 284.0f },
+{ 160.0f, 277.0f },{ 170.0f, 271.0f },{ 180.0f, 266.0f },{ 190.0f, 260.0f }
+};
 
+for (int i = 0; i < 20; i++)
+{
+	point.push_back(Point2f(Points[i][0], Points[i][1]));
+}
+
+double rhoMin = 0.0f, rhoMax = 360.0f, rhoStep = 1;
+double thetaMin = 0.0f, thetaMax = CV_PI / 2.0f, thetaStep = CV_PI / 180.0f;
+
+HoughLinesPointSet(point, lines, 20, 1, rhoMin, rhoMax, rhoStep, thetaMin, thetaMax, thetaStep);
+
+lines.copyTo(line3d);
+printf("votes:%d, rho:%.7f, theta:%.7f\n", (int)line3d.at(0).val[0], line3d.at(0).val[1], line3d.at(0).val[2]);
+Mat img = Mat(400, 400, CV_8UC3);
+img = Scalar::all(0);
+for (int i = 0; i < 20; i++)
+{
+	circle(img, Point2f(Points[i][0], Points[i][1]), 2, Scalar(0, 0, 255), -1, 8, 0);
+}
+
+double a = cos(line3d.at(0).val[2]), b = sin(line3d.at(0).val[2]);
+double x0 = a * line3d.at(0).val[1], y0 = b * line3d.at(0).val[1];
+Point pt1, pt2;
+pt1.x = cvRound(x0 + 1000 * (-b));
+pt1.y = cvRound(y0 + 1000 * (a));
+pt2.x = cvRound(x0 - 1000 * (-b));
+pt2.y = cvRound(y0 - 1000 * (a));
+line(img, pt1, pt2, Scalar(255, 225, 255), 1, 8, 0);
+imshow("img", img);
+waitKey();
 ```
 # 预角点检测
 ```
@@ -351,4 +392,19 @@ void cv::preCornerDetect (InputArray src,
                           int ksize, 
                           int borderType = BORDER_DEFAULT)
 
+// 计算用于角点检测的特征图，利用图像的二阶导数进行求解角点，，二阶导数为零说明是角点
+// 举个例子看效果
+Mat src = imread("D://data//building.jpg");
+imshow("原图", src);
+Mat src_f;
+src.convertTo(src_f, CV_32FC3);
+Mat src_gray;
+cvtColor(src_f, src_gray, CV_BGR2GRAY);
+Mat preconer;
+preCornerDetect(src_gray, preconer, 3);
+Mat erodeStruct = getStructuringElement(MORPH_RECT, Size(3, 3));
+dilate(preconer, preconer, erodeStruct);
+imshow("result", preconer);
+waitKey();
+// 效果的话，可以看出这个图是很复杂的，可能需要结合其他函数使用
 ```
