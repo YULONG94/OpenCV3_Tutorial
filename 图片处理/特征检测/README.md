@@ -408,3 +408,23 @@ imshow("result", preconer);
 waitKey();
 // 效果的话，可以看出这个图是很复杂的，可能需要结合其他函数使用
 ```
+# 补充一个物体检测的函数
+```
+enum  
+cv::TemplateMatchModes { 
+  cv::TM_SQDIFF = 0, 
+  cv::TM_SQDIFF_NORMED = 1, 
+  cv::TM_CCORR = 2, 
+  cv::TM_CCORR_NORMED = 3, 
+  cv::TM_CCOEFF = 4, 
+  cv::TM_CCOEFF_NORMED = 5 
+}
+
+void cv::matchTemplate (InputArray image, 
+			InputArray templ, 
+			OutputArray result, 
+			int method, 
+			InputArray mask = noArray())
+// 这个函数接收6种匹配方法，应该算作都是比较强硬的匹配方法
+// 模板配在原图抠出模板图的形式下准确率才比较高，不然的话可能准确度就不太高了
+```
