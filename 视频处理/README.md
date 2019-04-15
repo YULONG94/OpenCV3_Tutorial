@@ -34,6 +34,78 @@ while (1)
 cap.release();
 ```
 # 物体跟踪
+# 光流金字塔的创建
 ```
-
+int cv::buildOpticalFlowPyramid (InputArray img, 
+				 OutputArrayOfArrays pyramid, 
+				 Size winSize, 
+				 int maxLevel, 
+				 bool withDerivatives = true, 
+				 int pyrBorder = BORDER_REFLECT_101, 
+				 int derivBorder = BORDER_CONSTANT, 
+				 bool tryReuseInputImage = true)
+```
+# 光流金字塔的计算
+```
+void cv::calcOpticalFlowFarneback (InputArray prev, 
+				   InputArray next, 
+				   InputOutputArray flow, 
+				   double pyr_scale, 
+				   int levels, 
+				   int winsize, 
+				   int iterations, 
+				   int poly_n, 
+				   double poly_sigma, 
+				   int flags)
+```
+# 基于角点特征的金字塔LK光流跟踪算法
+```
+void cv::calcOpticalFlowPyrLK (InputArray prevImg, 
+			       InputArray nextImg, 
+			       InputArray prevPts, 
+			       InputOutputArray nextPts, 
+			       OutputArray status, 
+			       OutputArray err, 
+			       Size winSize = Size(21, 21), 
+			       int maxLevel = 3, 
+			       TermCriteria criteria = TermCriteria(TermCriteria::COUNT+TermCriteria::EPS, 30, 0.01), 
+			       int flags = 0, 
+			       double minEigThreshold = 1e-4)
+```
+# meanShift算法
+```
+int cv::meanShift (InputArray probImage, 
+		   Rect & window, 
+		   TermCriteria criteria)
+```
+# 连续自适应的MeanShift算法
+```
+RotatedRect cv::CamShift (InputArray probImage, 
+			  Rect & window, 
+			  TermCriteria criteria)
+```
+# createOptFlow_DualTVL1
+```
+Ptr<DualTVL1OpticalFlow> cv::createOptFlow_DualTVL1()
+```
+# estimateRigidTransform
+```
+Mat cv::estimateRigidTransform (InputArray src, 
+				InputArray dst, 
+				bool fullAffine)
+Mat cv::estimateRigidTransform (InputArray src, 
+				InputArray dst, 
+				bool fullAffine, 
+				int ransacMaxIters, 
+				double ransacGoodRatio, 
+				int ransacSize0)
+```
+# findTransformECC
+```
+double cv::findTransformECC (InputArray templateImage, 
+			     InputArray inputImage, 
+			     InputOutputArray warpMatrix, 
+			     int motionType = MOTION_AFFINE, 
+			     TermCriteria criteria = TermCriteria(TermCriteria::COUNT+TermCriteria::EPS, 50, 0.001), 
+			     InputArray inputMask = noArray())
 ```
