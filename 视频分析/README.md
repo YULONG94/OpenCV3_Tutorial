@@ -1,3 +1,5 @@
+[官方文档入口](https://docs.opencv.org/3.4.2/d7/de9/group__video.html)
+> 细想了一下，这个功能暂时不需要学，所以就先放着吧（心里清楚这是在偷懒）
 # 运动分析
 ```
 Ptr<BackgroundSubtractorKNN> cv::createBackgroundSubtractorKNN (int history = 500, 
