@@ -33,7 +33,7 @@ while (1)
 cap.release();
 ```
 # 物体跟踪
-# buildOpticalFlowPyramid
+# 光流金字塔搭建
 ```
 int cv::buildOpticalFlowPyramid (InputArray img, 
 				 OutputArrayOfArrays pyramid, 
@@ -44,7 +44,7 @@ int cv::buildOpticalFlowPyramid (InputArray img,
 				 int derivBorder = BORDER_CONSTANT, 
 				 bool tryReuseInputImage = true)
 ```
-# calcOpticalFlowFarneback
+# 光流金字塔计算
 ```
 void cv::calcOpticalFlowFarneback (InputArray prev, 
 				   InputArray next, 
@@ -57,7 +57,7 @@ void cv::calcOpticalFlowFarneback (InputArray prev,
 				   double poly_sigma, 
 				   int flags)
 ```
-# calcOpticalFlowPyrLK
+# LK（Lukas-Kanade）光流金字塔计算
 ```
 void cv::calcOpticalFlowPyrLK (InputArray prevImg, 
 			       InputArray nextImg, 
