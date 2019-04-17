@@ -49,5 +49,516 @@ CALIB_TILTED_MODEL （倾斜模型）：启用畸变系数tauX and tauY。标定
 CALIB_FIX_TAUX_TAUY ：在优化过程中，倾斜传感器模型的系数不被改变。如果cv_calib_use_intrinsic_guess设置，从提供的畸变系数矩阵中得到。否则，设置为0。
 函数返回: 重投影的总的均方根误差。
 // 举个例子
+// "../opencv/sources/samples/cpp/calibration.cpp"
+```
+# 矫正举证参数计算
+```
+void cv::calibrationMatrixValues (InputArray cameraMatrix, 
+                                  Size imageSize, 
+                                  double apertureWidth, 
+                                  double apertureHeight, 
+                                  double & fovx, 
+                                  double & fovy, 
+                                  double & focalLength, 
+                                  Point2d & principalPoint, 
+                                  double & aspectRatio)
+
+// 后面五个是接收输出的参数
+// 这个函数应该是用来做摄像头内部参数的估计测量
+```
+# 变换矩阵融合
+```
+void cv::composeRT (InputArray rvec1, 
+                    InputArray tvec1, 
+                    InputArray rvec2, 
+                    InputArray tvec2, 
+                    OutputArray rvec3, 
+                    OutputArray tvec3, 
+                    OutputArray dr3dr1 = noArray(), 
+                    OutputArray dr3dt1 = noArray(), 
+                    OutputArray dr3dr2 = noArray(), 
+                    OutputArray dr3dt2 = noArray(), 
+                    OutputArray dt3dr1 = noArray(), 
+                    OutputArray dt3dt1 = noArray(), 
+                    OutputArray dt3dr2 = noArray(), 
+                    OutputArray dt3dt2 = noArray())
+
+```
+# computeCorrespondEpilines
+```
+void cv::computeCorrespondEpilines (InputArray points, 
+                                    int whichImage, 
+                                    InputArray F, 
+                                    OutputArray lines)
+
+```
+# convertPointsFromHomogeneous
+```
+void cv::convertPointsFromHomogeneous (InputArray src, 
+                                       OutputArray dst)
+
+```
+# convertPointsHomogeneous
+```
+void cv::convertPointsHomogeneous (InputArray src, 
+                                   OutputArray dst)
+
+```
+# convertPointsToHomogeneous
+```
+void cv::convertPointsToHomogeneous (InputArray src, 
+                                     OutputArray dst)
+
+```
+# correctMatches
+```
+void cv::correctMatches (InputArray F, 
+                         InputArray points1, 
+                         InputArray points2, 
+                         OutputArray newPoints1, 
+                         OutputArray newPoints2)
+
+```
+# decomposeEssentialMat
+```
+void cv::decomposeEssentialMat (InputArray E, 
+                                OutputArray R1, 
+                                OutputArray R2, 
+                                OutputArray t)
+
+```
+# decomposeHomographyMat
+```
+int cv::decomposeHomographyMat (InputArray H, 
+                                InputArray K, 
+                                OutputArrayOfArrays rotations, 
+                                OutputArrayOfArrays translations, 
+                                OutputArrayOfArrays normals)
+
+```
+# decomposeProjectionMatrix
+```
+void cv::decomposeProjectionMatrix (InputArray projMatrix, 
+                                    OutputArray cameraMatrix, 
+                                    OutputArray rotMatrix, 
+                                    OutputArray transVect, 
+                                    OutputArray rotMatrixX = noArray(), 
+                                    OutputArray rotMatrixY = noArray(), 
+                                    OutputArray rotMatrixZ = noArray(), 
+                                    OutputArray eulerAngles = noArray())
+
+```
+# drawChessboardCorners
+```
+void cv::drawChessboardCorners (InputOutputArray image, 
+                                Size patternSize, 
+                                InputArray corners, 
+                                bool patternWasFound)
+
+```
+# estimateAffine2D
+```
+cv::Mat cv::estimateAffine2D (InputArray from, 
+                              InputArray to, 
+                              OutputArray inliers = noArray(), 
+                              int method = RANSAC, 
+                              double ransacReprojThreshold = 3, 
+                              size_t maxIters = 2000, 
+                              double confidence = 0.99, 
+                              size_t refineIters = 10)
+
+```
+# estimateAffine3D
+```
+int cv::estimateAffine3D (InputArray src, 
+                          InputArray dst, 
+                          OutputArray out, 
+                          OutputArray inliers, 
+                          double ransacThreshold = 3, 
+                          double confidence = 0.99)
+```
+# estimateAffinePartial2D
+```
+cv::Mat cv::estimateAffinePartial2D (InputArray from, 
+                                     InputArray to, 
+                                     OutputArray inliers = noArray(), 
+                                     int method = RANSAC, 
+                                     double ransacReprojThreshold = 3, 
+                                     size_t maxIters = 2000, 
+                                     double confidence = 0.99, 
+                                     size_t refineIters = 10)
+
+```
+# filterHomographyDecompByVisibleRefpoints
+```
+void cv::filterHomographyDecompByVisibleRefpoints (InputArrayOfArrays rotations, 
+                                                   InputArrayOfArrays normals, 
+                                                   InputArray beforePoints, 
+                                                   InputArray afterPoints, 
+                                                   OutputArray possibleSolutions, 
+                                                   InputArray pointsMask = noArray())
+
+```
+# filterSpeckles
+```
+void cv::filterSpeckles (InputOutputArray img, 
+                         double newVal, 
+                         int maxSpeckleSize, 
+                         double maxDiff, 
+                         InputOutputArray buf = noArray())
+
+```
+# find4QuadCornerSubpix
+```
+bool cv::find4QuadCornerSubpix (InputArray img, InputOutputArray corners, Size region_size)
+
+```
+# findChessboardCorners
+```
+bool cv::findChessboardCorners (InputArray image, 
+                                Size patternSize, 
+                                OutputArray corners, 
+                                int flags = CALIB_CB_ADAPTIVE_THRESH+CALIB_CB_NORMALIZE_IMAGE)
+
+```
+# findCirclesGrid
+```
+bool cv::findCirclesGrid (InputArray image, 
+                          Size patternSize, 
+                          OutputArray centers, 
+                          int flags, 
+                          const Ptr< FeatureDetector > & blobDetector, 
+                          CirclesGridFinderParameters parameters)
+
+bool cv::findCirclesGrid (InputArray image, 
+                          Size patternSize, 
+                          OutputArray centers, 
+                          int flags = CALIB_CB_SYMMETRIC_GRID, 
+                          const Ptr< FeatureDetector > & blobDetector = SimpleBlobDetector::create())
+
+```
+# findCirclesGrid2
+```
+bool cv::findCirclesGrid2 (InputArray image, 
+                           Size patternSize, 
+                           OutputArray centers, 
+                           int flags, 
+                           const Ptr< FeatureDetector > & blobDetector, 
+                           CirclesGridFinderParameters2 parameters)
+
+```
+# findEssentialMat
+```
+Mat cv::findEssentialMat (InputArray points1, 
+                          InputArray points2, 
+                          InputArray cameraMatrix, 
+                          int method = RANSAC, 
+                          double prob = 0.999, 
+                          double threshold = 1.0, 
+                          OutputArray mask = noArray())
+
+Mat cv::findEssentialMat (InputArray points1, 
+                          InputArray points2, 
+                          double focal = 1.0, 
+                          Point2d pp = Point2d(0, 0), 
+                          int method = RANSAC, 
+                          double prob = 0.999, 
+                          double threshold = 1.0, 
+                          OutputArray mask = noArray())
+
+```
+# findFundamentalMat
+```
+Mat cv::findFundamentalMat (InputArray points1, 
+                            InputArray points2, 
+                            int method = FM_RANSAC, 
+                            double ransacReprojThreshold = 3., 
+                            double confidence = 0.99, 
+                            OutputArray mask = noArray())
+
+Mat cv::findFundamentalMat (InputArray points1, 
+                            InputArray points2, 
+                            OutputArray mask, 
+                            int method = FM_RANSAC, 
+                            double ransacReprojThreshold = 3., 
+                            double confidence = 0.99)
+
+```
+# findHomography
+```
+Mat cv::findHomography (InputArray srcPoints, 
+                        InputArray dstPoints, 
+                        int method = 0, 
+                        double ransacReprojThreshold = 3, 
+                        OutputArray mask = noArray(), 
+                        const int maxIters = 2000, 
+                        const double confidence = 0.995)
+
+Mat cv::findHomography (InputArray srcPoints, 
+                        InputArray dstPoints, 
+                        OutputArray mask, 
+                        int method = 0, 
+                        double ransacReprojThreshold = 3)
+
+```
+# getOptimalNewCameraMatrix
+```
+Mat cv::getOptimalNewCameraMatrix (InputArray cameraMatrix, 
+                                   InputArray distCoeffs, 
+                                   Size imageSize, 
+                                   double alpha, 
+                                   Size newImgSize = Size(), 
+                                   Rect * validPixROI = 0, 
+                                   bool centerPrincipalPoint = false)
+
+```
+# getValidDisparityROI
+```
+Rect cv::getValidDisparityROI (Rect roi1, 
+                               Rect roi2, 
+                               int minDisparity, 
+                               int numberOfDisparities, 
+                               int SADWindowSize)
+
+```
+# initCameraMatrix2D
+```
+Mat cv::initCameraMatrix2D (InputArrayOfArrays objectPoints, 
+                            InputArrayOfArrays imagePoints, 
+                            Size imageSize, 
+                            double aspectRatio = 1.0)
+
+```
+# matMulDeriv
+```
+void cv::matMulDeriv (InputArray A, 
+                      InputArray B, 
+                      OutputArray dABdA, 
+                      OutputArray dABdB)
+```
+# projectPoints
+```
+void cv::projectPoints (InputArray objectPoints, 
+                        InputArray rvec, 
+                        InputArray tvec, 
+                        InputArray cameraMatrix, 
+                        InputArray distCoeffs, 
+                        OutputArray imagePoints, 
+                        OutputArray jacobian = noArray(), 
+                        double aspectRatio = 0)
+```
+# recoverPose
+```
+int cv::recoverPose (InputArray E, 
+                     InputArray points1, 
+                     InputArray points2, 
+                     InputArray cameraMatrix, 
+# 
+                     OutputArray R, 
+                     OutputArray t, 
+                     InputOutputArray mask = noArray())
+
+int cv::recoverPose (InputArray E, 
+                     InputArray points1, 
+                     InputArray points2, 
+                     OutputArray R, 
+                     OutputArray t, 
+                     double focal = 1.0, 
+                     Point2d pp = Point2d(0, 0), 
+                     InputOutputArray mask = noArray())
+
+int cv::recoverPose (InputArray E, 
+                     InputArray points1, 
+                     InputArray points2, 
+                     InputArray cameraMatrix, 
+                     OutputArray R, 
+                     OutputArray t, 
+                     double distanceThresh, 
+                     InputOutputArray mask = noArray(), 
+                     OutputArray triangulatedPoints = noArray())
+
+```
+# rectify3Collinear
+```
+float cv::rectify3Collinear (InputArray cameraMatrix1, 
+                             InputArray distCoeffs1, 
+                             InputArray cameraMatrix2, 
+                             InputArray distCoeffs2, 
+                             InputArray cameraMatrix3, 
+                             InputArray distCoeffs3, 
+                             InputArrayOfArrays imgpt1, 
+                             InputArrayOfArrays imgpt3, 
+                             Size imageSize, 
+                             InputArray R12, 
+                             InputArray T12, 
+                             InputArray R13, 
+                             InputArray T13, 
+                             OutputArray R1, 
+                             OutputArray R2, 
+                             OutputArray R3, 
+                             OutputArray P1, 
+                             OutputArray P2, 
+                             OutputArray P3, OutputArray Q, 
+                             double alpha, 
+                             Size newImgSize, 
+                             Rect * roi1, 
+                             Rect * roi2, 
+                             int flags)
+
+```
+# reprojectImageTo3D
+```
+void cv::reprojectImageTo3D (InputArray disparity, 
+                             OutputArray _3dImage, 
+                             InputArray Q, 
+                             bool handleMissingValues = false, 
+                             int ddepth = -1)
+
+```
+# Rodrigues
+```
+void cv::Rodrigues (InputArray src, 
+                    OutputArray dst, 
+                    OutputArray jacobian = noArray())
+
+```
+# RQDecomp3x3
+```
+Vec3d cv::RQDecomp3x3 (InputArray src, 
+                       OutputArray mtxR, 
+                       OutputArray mtxQ, 
+                       OutputArray Qx = noArray(), 
+                       OutputArray Qy = noArray(), 
+                       OutputArray Qz = noArray())
+
+```
+# sampsonDistance
+```
+double cv::sampsonDistance (InputArray pt1, 
+                            InputArray pt2, 
+                            InputArray F)
+
+```
+# solveP3P
+```
+int cv::solveP3P (InputArray objectPoints, 
+                  InputArray imagePoints, 
+                  InputArray cameraMatrix, 
+                  InputArray distCoeffs, 
+                  OutputArrayOfArrays rvecs, 
+                  OutputArrayOfArrays tvecs, 
+                  int flags)
+
+```
+# solvePnP
+```
+bool cv::solvePnP (InputArray objectPoints, 
+                   InputArray imagePoints, 
+                   InputArray cameraMatrix, 
+                   InputArray distCoeffs, 
+                   OutputArray rvec, 
+                   OutputArray tvec, 
+                   bool useExtrinsicGuess = false, 
+                   int flags = SOLVEPNP_ITERATIVE)
+
+```
+# solvePnPRansac
+```
+bool cv::solvePnPRansac (InputArray objectPoints, 
+                         InputArray imagePoints, 
+                         InputArray cameraMatrix, 
+                         InputArray distCoeffs, 
+                         OutputArray rvec, 
+                         OutputArray tvec, 
+                         bool useExtrinsicGuess = false, 
+                         int iterationsCount = 100, 
+                         float reprojectionError = 8.0, 
+                         double confidence = 0.99, 
+                         OutputArray inliers = noArray(), 
+                         int flags = SOLVEPNP_ITERATIVE)
+
+```
+# stereoCalibrate
+```
+double cv::stereoCalibrate (InputArrayOfArrays objectPoints, 
+                            InputArrayOfArrays imagePoints1, 
+                            InputArrayOfArrays imagePoints2, 
+                            InputOutputArray cameraMatrix1, 
+                            InputOutputArray distCoeffs1, 
+                            InputOutputArray cameraMatrix2, 
+                            InputOutputArray distCoeffs2, 
+                            Size imageSize, 
+                            InputOutputArray R, 
+                            InputOutputArray T, 
+                            OutputArray E, 
+                            OutputArray F, 
+                            OutputArray perViewErrors, 
+                            int flags = CALIB_FIX_INTRINSIC, 
+                            TermCriteria criteria = TermCriteria(TermCriteria::COUNT+TermCriteria::EPS, 30, 1e-6))
+
+double cv::stereoCalibrate (InputArrayOfArrays objectPoints, 
+                            InputArrayOfArrays imagePoints1, 
+                            InputArrayOfArrays imagePoints2, 
+                            InputOutputArray cameraMatrix1, 
+                            InputOutputArray distCoeffs1, 
+                            InputOutputArray cameraMatrix2, 
+                            InputOutputArray distCoeffs2, 
+                            Size imageSize, 
+                            OutputArray R, 
+                            OutputArray T, 
+                            OutputArray E, 
+                            OutputArray F, 
+                            int flags = CALIB_FIX_INTRINSIC, 
+                            TermCriteria criteria = TermCriteria(TermCriteria::COUNT+TermCriteria::EPS, 30, 1e-6))
+
+```
+# stereoRectify
+```
+void cv::stereoRectify (InputArray cameraMatrix1, 
+                        InputArray distCoeffs1, 
+                        InputArray cameraMatrix2, 
+                        InputArray distCoeffs2, 
+                        Size imageSize, 
+                        InputArray R, 
+                        InputArray T, 
+                        OutputArray R1, 
+                        OutputArray R2, 
+                        OutputArray P1, 
+                        OutputArray P2, 
+                        OutputArray Q, 
+                        int flags = CALIB_ZERO_DISPARITY, 
+                        double alpha = -1, 
+                        Size newImageSize = Size(), 
+                        Rect * validPixROI1 = 0, 
+                        Rect * validPixROI2 = 0)
+
+```
+# stereoRectifyUncalibrated
+```
+bool cv::stereoRectifyUncalibrated (InputArray points1, 
+                                    InputArray points2, 
+                                    InputArray F, 
+                                    Size imgSize, 
+                                    OutputArray H1, 
+                                    OutputArray H2, 
+                                    double threshold = 5)
+
+```
+# triangulatePoints
+```
+void cv::triangulatePoints (InputArray projMatr1, 
+                            InputArray projMatr2, 
+                            InputArray projPoints1, 
+                            InputArray projPoints2, 
+                            OutputArray points4D)
+
+```
+# validateDisparity
+```
+void cv::validateDisparity (InputOutputArray disparity, 
+                            InputArray cost, 
+                            int minDisparity, 
+                            int numberOfDisparities, 
+                            int disp12MaxDisp = 1)
 
 ```
