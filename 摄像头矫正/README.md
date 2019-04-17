@@ -99,7 +99,7 @@ void cv::composeRT (InputArray rvec1,
 ```
 # 外极线的计算绘制
 关于极线(epipolar line)的知识可以参见
-[对极几何原理](https://blog.csdn.net/ssw_1990/article/details/53355572),
+[对极几何原理](https://blog.csdn.net/ssw_1990/article/details/53355572)和
 [Epipolar geometry对极几何](https://blog.csdn.net/lin453701006/article/details/55096777)
 ```
 void cv::computeCorrespondEpilines (InputArray points, 
@@ -120,6 +120,7 @@ void cv::computeCorrespondEpilines (InputArray points,
 
 ```
 # convertPointsFromHomogeneous
+我们在数学中经常用到的是就是笛卡尔或者欧几里得坐标，关于齐次坐标参见[齐次坐标](https://blog.csdn.net/VenoBling/article/details/87794400)
 ```
 void cv::convertPointsFromHomogeneous (InputArray src, 
                                        OutputArray dst)
@@ -129,13 +130,13 @@ void cv::convertPointsFromHomogeneous (InputArray src,
 ```
 void cv::convertPointsHomogeneous (InputArray src, 
                                    OutputArray dst)
-
+// 相当于前后两个函数的共用版本
 ```
 # convertPointsToHomogeneous
 ```
 void cv::convertPointsToHomogeneous (InputArray src, 
                                      OutputArray dst)
-
+// 顾名思义，抱歉，现在还没仔细研究怎么用，以后再看
 ```
 # correctMatches
 ```
@@ -144,7 +145,8 @@ void cv::correctMatches (InputArray F,
                          InputArray points2, 
                          OutputArray newPoints1, 
                          OutputArray newPoints2)
-
+// 猜测主要目的是为了对矫正的结果进行优化调整，比如说优化出来的结果point1和point2是两张图对应的点集
+// F是关于描述极线约束，这个函数的根本目的是再满足极线约束的情况下，调整两组点的位置，使得两组距离最小
 ```
 # decomposeEssentialMat
 ```
@@ -152,7 +154,8 @@ void cv::decomposeEssentialMat (InputArray E,
                                 OutputArray R1, 
                                 OutputArray R2, 
                                 OutputArray t)
-
+// 目的应该是将一个矩阵E分解成可能的旋转和平移矩阵
+// 这里没搞懂为什么要分成两个可能的旋转矩阵
 ```
 # decomposeHomographyMat
 ```
@@ -161,7 +164,7 @@ int cv::decomposeHomographyMat (InputArray H,
                                 OutputArrayOfArrays rotations, 
                                 OutputArrayOfArrays translations, 
                                 OutputArrayOfArrays normals)
-
+// 将一个其次矩阵转化为三个部分（旋转，平移，正交平面）
 ```
 # decomposeProjectionMatrix
 ```
@@ -173,7 +176,8 @@ void cv::decomposeProjectionMatrix (InputArray projMatrix,
                                     OutputArray rotMatrixY = noArray(), 
                                     OutputArray rotMatrixZ = noArray(), 
                                     OutputArray eulerAngles = noArray())
-
+//也是某种拆分方法，
+// 目前也不是很了解为什么要做这种拆分，以后边学边了解
 ```
 # drawChessboardCorners
 ```
@@ -181,7 +185,7 @@ void cv::drawChessboardCorners (InputOutputArray image,
                                 Size patternSize, 
                                 InputArray corners, 
                                 bool patternWasFound)
-
+// 画出找到的棋盘角点
 ```
 # estimateAffine2D
 ```
@@ -193,7 +197,7 @@ cv::Mat cv::estimateAffine2D (InputArray from,
                               size_t maxIters = 2000, 
                               double confidence = 0.99, 
                               size_t refineIters = 10)
-
+// 找到两个点之间最好的仿射函数
 ```
 # estimateAffine3D
 ```
@@ -203,6 +207,8 @@ int cv::estimateAffine3D (InputArray src,
                           OutputArray inliers, 
                           double ransacThreshold = 3, 
                           double confidence = 0.99)
+                          
+// 和上面的相同，只不过换成的三维的点
 ```
 # estimateAffinePartial2D
 ```
@@ -214,7 +220,7 @@ cv::Mat cv::estimateAffinePartial2D (InputArray from,
                                      size_t maxIters = 2000, 
                                      double confidence = 0.99, 
                                      size_t refineIters = 10)
-
+// 
 ```
 # filterHomographyDecompByVisibleRefpoints
 ```
