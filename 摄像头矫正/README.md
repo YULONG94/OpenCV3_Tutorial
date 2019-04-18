@@ -1,4 +1,6 @@
 [官方文档入口](https://docs.opencv.org/3.4.2/d9/d0c/group__calib3d.html)
+
+这里太多三维空间的知识了，不再是简单的处理二维图片，所以看了一半，着实学不下去，找个借口，以后应用的可能性太低了，不学
 # 摄像头矫正
 ```
 double cv::calibrateCamera (InputArrayOfArrays objectPoints, 
@@ -146,7 +148,7 @@ void cv::correctMatches (InputArray F,
                          OutputArray newPoints1, 
                          OutputArray newPoints2)
 // 猜测主要目的是为了对矫正的结果进行优化调整，比如说优化出来的结果point1和point2是两张图对应的点集
-// F是关于描述极线约束，这个函数的根本目的是再满足极线约束的情况下，调整两组点的位置，使得两组距离最小
+// F是关于描述极线约束，这个函数的根本目的是在满足极线约束的情况下，调整两组点的位置，使得两组距离最小
 ```
 # decomposeEssentialMat
 ```
@@ -186,6 +188,10 @@ void cv::drawChessboardCorners (InputOutputArray image,
                                 InputArray corners, 
                                 bool patternWasFound)
 // 画出找到的棋盘角点
+image：用作输出的画布
+patterSize：棋盘的规格，横纵的格数
+corners：检测到的棋盘角点，就是findChessboardCorners的输出
+patternWasfound：指示是否找到完整的棋盘
 ```
 # estimateAffine2D
 ```
@@ -220,7 +226,36 @@ cv::Mat cv::estimateAffinePartial2D (InputArray from,
                                      size_t maxIters = 2000, 
                                      double confidence = 0.99, 
                                      size_t refineIters = 10)
-// 
+// 贴一张别人的例子
+
+std::vector<cv::Point> p1s,p2s;
+
+p1s.push_back(cv::Point( 100, 0));
+p1s.push_back(cv::Point( 0, 100));
+p1s.push_back(cv::Point(-100, 0));
+p1s.push_back(cv::Point( 0,-100));
+
+p2s.push_back(cv::Point(71, -71));
+p2s.push_back(cv::Point(71, 71));
+p2s.push_back(cv::Point(-71, 71));
+p2s.push_back(cv::Point(-71, -71));
+
+// 1.
+cv::Mat t_false = cv::estimateRigidTransform(p1s,p2s,false);
+std::cout << "estimateRigidTransform false: " << t_false << "\n" << std::flush;
+
+// 2.
+cv::Mat t_true = cv::estimateRigidTransform(p1s,p2s,true);
+std::cout << "estimateRigidTransform true:" << t_true << "\n" << std::flush;
+
+// 3.
+std::vector<uchar> inliers(p1s.size(), 0);
+cv::Mat affine1 = cv::estimateAffine2D(p1s, p2s, inliers);
+std::cout << "estimateAffine2D" << affine1 << "\n" << std::flush;
+
+// 4.
+cv::Mat affine2 = cv::estimateAffinePartial2D(p1s, p2s, inliers);
+std::cout << "estimateAffinePartial2D" << affine2 << "\n" << std::flush;
 ```
 # filterHomographyDecompByVisibleRefpoints
 ```
@@ -230,7 +265,8 @@ void cv::filterHomographyDecompByVisibleRefpoints (InputArrayOfArrays rotations,
                                                    InputArray afterPoints, 
                                                    OutputArray possibleSolutions, 
                                                    InputArray pointsMask = noArray())
-
+// 并没有搞懂这是用来做什么的
+// 初步觉得是对decomposeHomographyMat得到的方案进行过滤，得到那个才是真正的解决方案
 ```
 # filterSpeckles
 ```
@@ -239,11 +275,35 @@ void cv::filterSpeckles (InputOutputArray img,
                          int maxSpeckleSize, 
                          double maxDiff, 
                          InputOutputArray buf = noArray())
+// 用于过滤不同块的小斑点
+// 尝试了多种参数设置，但是任然没有发现具体的用法
+// 留下能成功跑的程序片段，日后再研究
 
+Mat src = imread("D://data//block.png", 0);
+imshow("原图", src);
+Mat src16;
+src.convertTo(src16, CV_16S, 256, -32768);
+cout << src16.depth() << endl;
+imshow("原图16", src16);
+filterSpeckles(src16, 10000000, 200, 100);
+imshow("原图16_f", src16);
+waitKey(0);
 ```
 # find4QuadCornerSubpix
 ```
 bool cv::find4QuadCornerSubpix (InputArray img, InputOutputArray corners, Size region_size)
+// 看到subpix就应该知道这是一种降低角点查找的偏差
+第一个参数image，输入的Mat矩阵，最好是8位灰度图像，检测效率更高；
+
+第二个参数corners，初始的角点坐标向量，同时作为亚像素坐标位置的输出，所以需要是浮点型数据，一般用元素
+                  是Pointf2f/Point2d的向量来表示：vector<Point2f/Point2d> iamgePointsBuf；
+
+第三个参数winSize，大小为搜索窗口的一半；
+
+第四个参数zeroZone，死区的一半尺寸，死区为不对搜索区的中央位置做求和运算的区域。它是用来避免自相关矩阵
+                   出现某些可能的奇异性。当值为（-1，-1）时表示没有死区；
+
+第五个参数criteria，定义求角点的迭代过程的终止条件，可以为迭代次数和角点精度两者的组合；
 
 ```
 # findChessboardCorners
@@ -252,7 +312,23 @@ bool cv::findChessboardCorners (InputArray image,
                                 Size patternSize, 
                                 OutputArray corners, 
                                 int flags = CALIB_CB_ADAPTIVE_THRESH+CALIB_CB_NORMALIZE_IMAGE)
+这个函数用来初步寻找图像中可能存在的corners，如果找到了就返回true，否则false
+贴出官方提供的例子
+Size patternsize(8,6); //interior number of corners
+Mat gray = ....; //source image
+vector<Point2f> corners; //this will be filled by the detected corners
 
+//CALIB_CB_FAST_CHECK saves a lot of time on images
+//that do not contain any chessboard corners
+bool patternfound = findChessboardCorners(gray, patternsize, corners,
+        CALIB_CB_ADAPTIVE_THRESH + CALIB_CB_NORMALIZE_IMAGE
+        + CALIB_CB_FAST_CHECK);
+
+if(patternfound)
+  cornerSubPix(gray, corners, Size(11, 11), Size(-1, -1),
+    TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1));
+
+drawChessboardCorners(img, patternsize, Mat(corners), patternfound);
 ```
 # findCirclesGrid
 ```
@@ -268,7 +344,15 @@ bool cv::findCirclesGrid (InputArray image,
                           OutputArray centers, 
                           int flags = CALIB_CB_SYMMETRIC_GRID, 
                           const Ptr< FeatureDetector > & blobDetector = SimpleBlobDetector::create())
+// 这前后三个函数都是以圆点标定板为参准进行相机标定的，类似于利用棋盘来做标定
+//贴出官方提供的例子
+Size patternsize(7,7); //number of centers
+Mat gray = ....; //source image
+vector<Point2f> centers; //this will be filled by the detected centers
 
+bool patternfound = findCirclesGrid(gray, patternsize, centers);
+
+drawChessboardCorners(img, patternsize, Mat(centers), patternfound);
 ```
 # findCirclesGrid2
 ```
@@ -280,6 +364,7 @@ bool cv::findCirclesGrid2 (InputArray image,
                            CirclesGridFinderParameters2 parameters)
 
 ```
+关于双目相机的几种矩阵的介绍参见[基本矩阵、本质矩阵和单应矩阵](https://blog.csdn.net/kokerf/article/details/72191054)
 # findEssentialMat
 ```
 Mat cv::findEssentialMat (InputArray points1, 
@@ -316,6 +401,22 @@ Mat cv::findFundamentalMat (InputArray points1,
                             double ransacReprojThreshold = 3., 
                             double confidence = 0.99)
 
+// 贴出官方的例子
+// Example. Estimation of fundamental matrix using the RANSAC algorithm
+int point_count = 100;
+vector<Point2f> points1(point_count);
+vector<Point2f> points2(point_count);
+
+// initialize the points here ...
+for( int i = 0; i < point_count; i++ )
+{
+    points1[i] = ...;
+    points2[i] = ...;
+}
+
+Mat fundamental_matrix =
+ findFundamentalMat(points1, points2, FM_RANSAC, 3, 0.99);
+
 ```
 # findHomography
 ```
@@ -333,6 +434,7 @@ Mat cv::findHomography (InputArray srcPoints,
                         int method = 0, 
                         double ransacReprojThreshold = 3)
 
+// 找到两个平面的透射变化矩阵
 ```
 # getOptimalNewCameraMatrix
 ```
@@ -343,7 +445,7 @@ Mat cv::getOptimalNewCameraMatrix (InputArray cameraMatrix,
                                    Size newImgSize = Size(), 
                                    Rect * validPixROI = 0, 
                                    bool centerPrincipalPoint = false)
-
+// 得到自由比例参数的新摄像机矩阵
 ```
 # getValidDisparityROI
 ```
@@ -360,7 +462,7 @@ Mat cv::initCameraMatrix2D (InputArrayOfArrays objectPoints,
                             InputArrayOfArrays imagePoints, 
                             Size imageSize, 
                             double aspectRatio = 1.0)
-
+// 得到一个初始比较粗糙的相机参数，输入分别是实际空间坐标和像空间坐标
 ```
 # matMulDeriv
 ```
@@ -379,6 +481,8 @@ void cv::projectPoints (InputArray objectPoints,
                         OutputArray imagePoints, 
                         OutputArray jacobian = noArray(), 
                         double aspectRatio = 0)
+
+// 将一个三维的点投影到像平面中
 ```
 # recoverPose
 ```
@@ -386,7 +490,6 @@ int cv::recoverPose (InputArray E,
                      InputArray points1, 
                      InputArray points2, 
                      InputArray cameraMatrix, 
-# 
                      OutputArray R, 
                      OutputArray t, 
                      InputOutputArray mask = noArray())
@@ -409,7 +512,27 @@ int cv::recoverPose (InputArray E,
                      double distanceThresh, 
                      InputOutputArray mask = noArray(), 
                      OutputArray triangulatedPoints = noArray())
+// 一般结合findEssentialMat进行使用
+// 贴一个官方提供的案例
+// Example. Estimation of fundamental matrix using the RANSAC algorithm
+int point_count = 100;
+vector<Point2f> points1(point_count);
+vector<Point2f> points2(point_count);
 
+// initialize the points here ...
+for( int i = 0; i < point_count; i++ )
+{
+    points1[i] = ...;
+    points2[i] = ...;
+}
+
+// cametra matrix with both focal lengths = 1, and principal point = (0, 0)
+Mat cameraMatrix = Mat::eye(3, 3, CV_64F);
+
+Mat E, R, t, mask;
+
+E = findEssentialMat(points1, points2, cameraMatrix, RANSAC, 0.999, 1.0, mask);
+recoverPose(E, points1, points2, cameraMatrix, R, t, mask);
 ```
 # rectify3Collinear
 ```
@@ -437,7 +560,7 @@ float cv::rectify3Collinear (InputArray cameraMatrix1,
                              Rect * roi1, 
                              Rect * roi2, 
                              int flags)
-
+// “三头”摄像头？的矫正
 ```
 # reprojectImageTo3D
 ```
@@ -446,14 +569,14 @@ void cv::reprojectImageTo3D (InputArray disparity,
                              InputArray Q, 
                              bool handleMissingValues = false, 
                              int ddepth = -1)
-
+// 将平面反投影到三维空间点
 ```
 # Rodrigues
 ```
 void cv::Rodrigues (InputArray src, 
                     OutputArray dst, 
                     OutputArray jacobian = noArray())
-
+// 将旋转矩阵转化成旋转vector，或者相反的顺序
 ```
 # RQDecomp3x3
 ```
