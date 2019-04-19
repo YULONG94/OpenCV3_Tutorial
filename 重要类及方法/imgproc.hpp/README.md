@@ -16,3 +16,28 @@ equalizeHist(m, dts2);
 imshow("2", dts2);
 waitKey();
 ```
+> 创建
+```
+Ptr<CLAHE> clahe = createCLAHE();
+```
+> 使用
+```
+virtual void cv::CLAHE::apply (InputArray src, 
+                               OutputArray dst)
+```
+> 设置门限值
+```
+virtual void cv::CLAHE::setClipLimit (double clipLimit)
+```
+> 获取门限值
+```
+virtual double cv::CLAHE::getClipLimit ()const
+```
+> 设置局部大小
+```
+virtual void cv::CLAHE::setTilesGridSize (Size tileGridSize)
+```
+> 获取局部大小
+```
+virtual Size cv::CLAHE::getTilesGridSize ()const
+```
