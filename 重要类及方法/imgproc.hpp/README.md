@@ -45,3 +45,8 @@ virtual Size cv::CLAHE::getTilesGridSize ()const
 ```
 virtual void cv::CLAHE::collectGarbage ()
 ```
+# 广义hough变换GeneralizedHough
+从霍夫变换到广义霍夫变换的理论介绍参见[霍夫变换到广义霍夫变换](https://blog.csdn.net/tiandijun/article/details/47251913)
+```
+
+```
