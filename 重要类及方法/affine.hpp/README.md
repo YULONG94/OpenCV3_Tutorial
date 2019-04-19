@@ -1,3 +1,4 @@
+[官方文档入口](https://docs.opencv.org/3.4.2/dd/d99/classcv_1_1Affine3.html)
 # cv::Affine3< T >
 ```
 typedef Affine3< double > cv::Affine3d
