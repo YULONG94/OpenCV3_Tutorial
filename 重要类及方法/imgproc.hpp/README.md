@@ -41,3 +41,7 @@ virtual void cv::CLAHE::setTilesGridSize (Size tileGridSize)
 ```
 virtual Size cv::CLAHE::getTilesGridSize ()const
 ```
+> 收集垃圾？(滑稽)
+```
+virtual void cv::CLAHE::collectGarbage ()
+```
