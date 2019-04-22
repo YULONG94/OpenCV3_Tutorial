@@ -1,5 +1,6 @@
 [官方文档入口](https://docs.opencv.org/3.4.2/dd/de7/group__videoio.html)
 > class cv::VideoCapture 
+
 > class cv::VideoWriter
 ```
 // 官方的这个例子很好，直接贴出来
@@ -64,8 +65,20 @@ int main(int, char**)
     return 0;
 }
 ```
+# 先开个头说明一下读取帧的四种方法
+```
+// 方法一 
+capture.read(frame); 
+// 方法二 
+capture.grab(); 
+// 方法三
+capture.retrieve(frame); 
+// 方法四
+capture >> frame;
+```
 # 一些类函数
 > virtual double cv::VideoCapture::get (int propId)const
+
 > virtual double cv::VideoWriter::get (int propId)const
 ```
 // 用来获得两种类的相关属性
@@ -79,3 +92,33 @@ https://docs.opencv.org/3.4.2/d4/d15/group__videoio__flags__base.html#ga41c5cfa7
 https://docs.opencv.org/3.4.2/dc/dfc/group__videoio__flags__others.html
 ```
 > virtual bool cv::VideoCapture::grab ()
+```
+// 读取下一帧，如果读取成功就返回true
+```
+> virtual bool cv::VideoWriter::isOpened ()const
+```
+//判断video capturing是否初始化成功
+```
+> virtual bool cv::VideoCapture::open (const String & filename)
+```
+// 其实这只是四种方法中的一种，与初始化capture一样，四种重载函数只有参数是不一样的
+```
+> virtual bool cv::VideoCapture::read (OutputArray image)
+```
+// 读取视频帧
+```
+> virtual void cv::VideoCapture::release ()
+```
+// 关闭视频流
+```
+> virtual bool cv::VideoCapture::retrieve (OutputArray image, int flag = 0)
+```
+// 读取和解码视频帧
+```
+> virtual bool cv::VideoCapture::set (int propId, double value)
+```
+// 设置videocapture的属性
+```
+> static Ptr<IVideoWriter> cv::VideoWriter::create (const String & filename, 
+    int fourcc, double fps, Size frameSize, bool isColor = true )
+
