@@ -121,4 +121,47 @@ https://docs.opencv.org/3.4.2/dc/dfc/group__videoio__flags__others.html
 ```
 > static Ptr<IVideoWriter> cv::VideoWriter::create (const String & filename, 
     int fourcc, double fps, Size frameSize, bool isColor = true )
+```
+// 应该是用于创建videowriter的方法，但是我一直用的是另一种，就是拆分成
+// VideoWriter fout;
+// fout.open(...);
+```
+> static int cv::VideoWriter::fourcc (char c1, char c2, char c3, char c4)
+```
+// 创建视频编码格式 
+```
+> virtual double cv::VideoWriter::get (int propId)const
+```
+// 获取videowrite的属性 
+```
+> virtual bool cv::VideoWriter::isOpened ()const
+```
+// 对videowrite是否正常创建进行判断
+```
+> virtual bool cv::VideoWriter::open (const String & filename, int fourcc, double fps, Size frameSize, bool isColor = true)
+```
+// 前面提到过 
+```
+> bool cv::VideoWriter::open (const String & filename, int apiPreference, int fourcc, double fps, Size frameSize, bool isColor = true)
+```
+// 重载格式
+```
+> 操作符“<<”以及“>>”
+```
+// 这两种操作符是用于视频帧的读取和写入的 
+```
+> virtual void cv::VideoWriter::release ()
+```
+// 与videocapture的release相同
+```
+> virtual bool cv::VideoWriter::set (int propId, double value)
+```
+// 与videocapture的release相同
+```
+> virtual void cv::VideoWriter::write (const Mat & image)
+```
+// 写入视频帧
+```
+
+
 
