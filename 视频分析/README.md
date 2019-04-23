@@ -2,6 +2,8 @@
 > 细想了一下，这个功能暂时不需要学，所以就先放着吧（心里清楚这是在偷懒）
 # 运动分析
 ```
+// 这个类函数不仅可以作用在视频格式上，也可以对摄像头传来的视频流进行处理
+// 工作原理是使用前面很少的图像找到背景
 Ptr<BackgroundSubtractorKNN> cv::createBackgroundSubtractorKNN (int history = 500, 
                                                                 double dist2Threshold = 400.0, 
                                                                 bool detectShadows = true)
